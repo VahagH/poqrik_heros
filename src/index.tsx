@@ -1,4 +1,3 @@
-import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
@@ -12,7 +11,7 @@ const theme = createTheme({
       main: "#724288",
     },
     secondary: {
-      main: "#5169F3",
+      main: "#A45EE5",
     },
     error: {
       main: "#FF3333",

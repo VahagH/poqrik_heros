@@ -1,11 +1,18 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { Route, Routes } from "react-router-dom";
-import { PageProps, privatePages, publicPages } from "./router";
+import {
+  PageProps,
+  privatePages,
+  privatePagesWithCode,
+  publicPages,
+} from "./router";
 import NotFound from "./components/NotFound";
 import Loading from "./components/Loading/Loading";
-import { Suspense, useState } from "react";
-import { Container, makeStyles } from "@material-ui/core";
+import { createContext, Suspense, useEffect, useState } from "react";
+import { Container, Dialog, makeStyles } from "@material-ui/core";
+import packageJSON from "./../package.json";
+import NavBar from "./components/NavBar";
 const firebaseConfig = {
   apiKey: "AIzaSyDVWDsAi1Ax-oe-9-DF9v2bI9f9PxQt_6E",
   authDomain: "poqrikheros-af1ff.firebaseapp.com",
@@ -22,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
   wrapper: {
     width: "100%",
     height: "100vh",
-    overflow: "hidden",
+    overflowX: "hidden",
     display: "flex",
     flexDirection: "column",
   },
@@ -34,6 +41,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "center",
     fontSize: 14,
+    cursor: "default",
     fontWeight: 400,
     background: theme.palette.primary.main,
     color: "#fff",
@@ -44,8 +52,14 @@ const useStyles = makeStyles((theme) => ({
 function App() {
   const classes = useStyles();
   const [auth, setAuth] = useState({ auth: false });
+  const [code, setCode] = useState(0);
+  const handleClick = () => {
+    setCode(code + 1);
+  };
+
   return (
     <div className={classes.wrapper}>
+      <NavBar />
       <Container className={classes.container}>
         <Suspense fallback={<Loading />}>
           <Routes>
@@ -63,12 +77,22 @@ function App() {
                 element={<el.component />}
               ></Route>
             ))}
+            {code === 3 &&
+              privatePagesWithCode.map((el: PageProps) => (
+                <Route
+                  key={el.path}
+                  path={el.path}
+                  element={<el.component code={code} />}
+                ></Route>
+              ))}
             <Route path="*" element={<NotFound />}></Route>
           </Routes>
         </Suspense>
       </Container>
       <div className={classes.footer}>
-        Բոլոր իրավունքները պաշտպանված են: &copy; 2022
+        Բոլոր իրա<span onClick={handleClick}>վ</span>ունքները պաշտպանված են:{" "}
+        {/* disable if loged in */}
+        &copy; 2022
       </div>
     </div>
   );

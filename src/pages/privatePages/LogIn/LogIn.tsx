@@ -93,6 +93,17 @@ const LogIn = () => {
   const handleSubmit = () => {
     // setClickInfo({ submit: true, error: "cascsa" });
   };
+
+  // useEffect(() => {
+  //   return () => {
+  //     localStorage.removeItem("adTo");
+  //   };
+  // }, []);
+
+  // if (value !== "3") {
+  //   return <Navigate to={"/dresses"} replace />;
+  // }
+
   return (
     <div className={classes.wrapper}>
       <div className={classes.container}>
