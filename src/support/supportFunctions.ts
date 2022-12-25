@@ -1,4 +1,4 @@
-export function hexToRgbA(hex: any) {
+export function hexToRgbA(hex: any, opacity: any) {
   let c: any;
   if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
     c = hex.substring(1).split("");
@@ -7,7 +7,9 @@ export function hexToRgbA(hex: any) {
     }
     c = "0x" + c.join("");
     return (
-      "rgba(" + [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(",") + ",0.8)"
+      "rgba(" +
+      [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(",") +
+      `,${opacity})`
     );
   }
   throw new Error("Bad Hex");

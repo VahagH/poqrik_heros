@@ -6,8 +6,9 @@ export interface PageProps {
   name: string;
   path: string;
   navBar?: boolean;
-  component: any;
+  component?: any;
   role?: string[];
+  onClick?: () => void;
 }
 export const publicPages: PageProps[] = [
   {
@@ -21,6 +22,12 @@ export const publicPages: PageProps[] = [
     path: "/dresses",
     navBar: true,
     component: React.lazy(() => import("./pages/publicPages/Dresses")),
+  },
+  {
+    name: "Ընտրվածներ",
+    path: "/favorites",
+    navBar: false,
+    component: React.lazy(() => import("./pages/publicPages/Favorites")),
   },
   {
     name: "Կերպարներ",

@@ -1,6 +1,6 @@
 import React from "react";
 import { TextValidator } from "react-material-ui-form-validator";
-import { CaseInputProps } from "../../types";
+import { CaseInputProps } from "../../support/types";
 
 export const CaseInputTypes = {
   TEXT: "text",

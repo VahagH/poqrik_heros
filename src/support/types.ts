@@ -3,7 +3,7 @@ export interface CaseInputProps {
   name: string;
   label: string;
   value: string | number | [] | any;
-  type: string;
+  type?: string;
   isRequired?: boolean;
   minStringLength?: number;
   fullWidth?: boolean;
@@ -13,14 +13,34 @@ export interface CaseInputProps {
   error?: boolean;
   onlyRead?: boolean;
 }
+
+export interface CRUDTableRowProps {
+  columns: ColumnProps[];
+  colapseColumns?: any;
+  row: any;
+  idx: number;
+  isSelected: number | null;
+  setSelected: (idx: number) => void;
+}
+
 export interface ColumnProps {
   name: string;
   key: string;
-  type: string;
+  type?: string;
   isRequired?: boolean;
   minStringLength?: number;
+  hideColumnFromTable?: boolean;
   fullWidth?: boolean;
   autoFocus?: boolean;
   disabled?: boolean;
   onlyRead?: boolean;
+  customElement?: (el: any, row: any) => any;
+  rowValueKey?: string;
+  rowLabelKey?: string;
+}
+
+export interface CRUDTableProps {
+  columns: ColumnProps[];
+  colapseColumns?: any;
+  rows: any[] | null;
 }

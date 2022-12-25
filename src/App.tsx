@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import {
   PageProps,
   privatePages,
@@ -35,6 +35,7 @@ const useStyles = makeStyles((theme) => ({
   },
   container: {
     flexGrow: 1,
+    marginTop: 30,
   },
   footer: {
     height: 35,
@@ -51,8 +52,8 @@ const useStyles = makeStyles((theme) => ({
 
 function App() {
   const classes = useStyles();
-  const [auth, setAuth] = useState({ auth: false });
   const [code, setCode] = useState(0);
+  const location = useLocation();
   const handleClick = () => {
     setCode(code + 1);
   };
@@ -92,7 +93,7 @@ function App() {
       <div className={classes.footer}>
         Բոլոր իրա<span onClick={handleClick}>վ</span>ունքները պաշտպանված են:{" "}
         {/* disable if loged in */}
-        &copy; 2022
+        &copy; {new Date().getFullYear()}
       </div>
     </div>
   );

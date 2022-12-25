@@ -7,13 +7,14 @@ import { PageProps } from "../../router";
 
 const useStyles = makeStyles((theme) => ({
   nav: {
+    width: "max-content",
     marginLeft: 5,
     borderRadius: 20,
-    "&.active  .MuiTypography-root": {
-      color: "#A45EE5",
+    "&.active .MuiTypography-root, &.active": {
+      color: theme.palette.secondary.main,
     },
     "&:active": {
-      color: "#A45EE5",
+      color: theme.palette.secondary.main,
     },
     "&:hover": {
       background: "agba(0,0,0,.9)",
@@ -28,9 +29,10 @@ const useStyles = makeStyles((theme) => ({
 
 interface ListItemProps {
   link: PageProps;
+  icon?: any;
 }
 
-const ListItemLink = ({ link }: ListItemProps) => {
+const ListItemLink = ({ link, icon }: ListItemProps) => {
   const classes = useStyles();
 
   const renderLink = useMemo(
@@ -42,7 +44,7 @@ const ListItemLink = ({ link }: ListItemProps) => {
   );
   return (
     <ListItem button {...{ component: renderLink }} className={classes.nav}>
-      <ListItemText primary={link.name} />
+      {icon ? icon : <ListItemText primary={link.name} />}
     </ListItem>
   );
 };

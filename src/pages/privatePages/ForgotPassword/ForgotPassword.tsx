@@ -4,10 +4,10 @@ import { ValidatorForm } from "react-material-ui-form-validator";
 import { columns } from "./columns";
 import _ from "lodash";
 import CaseInput from "../../../components/CaseInput";
-import { ColumnProps } from "../../../types";
+import { ColumnProps } from "../../../support/types";
 import { useState } from "react";
 import { CircularProgress } from "@mui/material";
-import { hexToRgbA } from "../../../supportFunctions";
+import { hexToRgbA } from "../../../support/supportFunctions";
 import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
     color: "#fff",
     textAlign: "right",
     "&:hover": {
-      background: hexToRgbA(theme.palette.primary.main),
+      background: hexToRgbA(theme.palette.primary.main, "0.8"),
     },
   },
   error: {
