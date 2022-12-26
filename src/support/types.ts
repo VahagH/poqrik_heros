@@ -30,6 +30,7 @@ export interface ColumnProps {
   isRequired?: boolean;
   minStringLength?: number;
   hideColumnFromTable?: boolean;
+  filterable?: boolean;
   fullWidth?: boolean;
   autoFocus?: boolean;
   disabled?: boolean;
@@ -43,4 +44,23 @@ export interface CRUDTableProps {
   columns: ColumnProps[];
   colapseColumns?: any;
   rows: any[] | null;
+  addData?: (data: any) => void;
 }
+export interface DialogProps {
+  dialogType: string;
+  dialogTitle: string;
+  dialogSubtitle?: string;
+  open: boolean;
+  dialogWidth?: any;
+}
+export interface CRUDDialogProps {
+  dialog: DialogProps | undefined;
+  setDialog: (data: undefined) => void;
+}
+
+export const DIALOG_TYPES = {
+  add: "add",
+  delete: "delete",
+  edit: "edit",
+  read: "read",
+};

@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import {
   PageProps,
   privatePages,
@@ -13,6 +13,7 @@ import { createContext, Suspense, useEffect, useState } from "react";
 import { Container, Dialog, makeStyles } from "@material-ui/core";
 import packageJSON from "./../package.json";
 import NavBar from "./components/NavBar";
+import moment from "moment";
 const firebaseConfig = {
   apiKey: "AIzaSyDVWDsAi1Ax-oe-9-DF9v2bI9f9PxQt_6E",
   authDomain: "poqrikheros-af1ff.firebaseapp.com",
@@ -30,6 +31,7 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     height: "100vh",
     overflowX: "hidden",
+    overflowY: "auto",
     display: "flex",
     flexDirection: "column",
   },
@@ -53,7 +55,6 @@ const useStyles = makeStyles((theme) => ({
 function App() {
   const classes = useStyles();
   const [code, setCode] = useState(0);
-  const location = useLocation();
   const handleClick = () => {
     setCode(code + 1);
   };
@@ -91,9 +92,9 @@ function App() {
         </Suspense>
       </Container>
       <div className={classes.footer}>
-        Բոլոր իրա<span onClick={handleClick}>վ</span>ունքները պաշտպանված են:{" "}
+        Բոլոր իրա<span onClick={handleClick}>վ</span>ունքները պաշտպանված են:
         {/* disable if loged in */}
-        &copy; {new Date().getFullYear()}
+        &copy; {moment().year()}
       </div>
     </div>
   );

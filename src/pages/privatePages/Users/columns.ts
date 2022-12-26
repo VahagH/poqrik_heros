@@ -3,4 +3,5 @@ export const columns = [
   { name: "Ազգանուն", key: "lastName" },
   { name: "Էլ․ հասցե", key: "email" },
   { name: "Հեռախոսահամար", key: "phone" },
+  { name: "Կարգավիճակ", key: "status", filterable: true },
 ];

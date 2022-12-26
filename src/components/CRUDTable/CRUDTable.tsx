@@ -10,22 +10,39 @@ import CRUDTableRow from "./components/CRUDTableRow";
 import { useState } from "react";
 import { CircularProgress } from "@mui/material";
 import PageActions from "./components/PageActions";
+import CRUDDialog from "./components/CRUDDialog";
 
-const CRUDTable = ({ columns, colapseColumns, rows }: CRUDTableProps) => {
+const CRUDTable = ({
+  columns,
+  colapseColumns,
+  rows,
+  addData,
+}: CRUDTableProps) => {
   const [isSelected, setSelected] = useState<number | null>(null);
   const filteredColumns = columns.filter((el) =>
     el.hideColumnFromTable ? !el.hideColumnFromTable : true
   );
+  const [dialog, setDialog] = useState(undefined);
+  const [formData, setFormData] = useState();
   return (
     <>
-      <PageActions />
+      <CRUDDialog dialog={dialog} setDialog={setDialog} />
+      <PageActions
+        addData={addData}
+        setDialog={setDialog}
+        columns={columns.filter((el) => el.filterable)}
+      />
       <TableContainer component={Paper}>
         <Table aria-label="collapsible table">
           <TableHead>
             <TableRow>
               {colapseColumns && <TableCell />}
               {filteredColumns.map((el: ColumnProps) => (
-                <TableCell align="left" key={el.key}>
+                <TableCell
+                  align="left"
+                  key={el.key}
+                  // style={{ fontWeight: 600, color: "#888" }}
+                >
                   {el.name}
                 </TableCell>
               ))}
