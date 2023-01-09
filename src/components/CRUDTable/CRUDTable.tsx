@@ -17,16 +17,27 @@ const CRUDTable = ({
   colapseColumns,
   rows,
   addData,
+  getData,
+  addSuccessCallback,
 }: CRUDTableProps) => {
   const [isSelected, setSelected] = useState<number | null>(null);
   const filteredColumns = columns.filter((el) =>
     el.hideColumnFromTable ? !el.hideColumnFromTable : true
   );
   const [dialog, setDialog] = useState(undefined);
-  const [formData, setFormData] = useState();
+  const [formData, setFormData] = useState(null);
   return (
     <>
-      <CRUDDialog dialog={dialog} setDialog={setDialog} />
+      <CRUDDialog
+        dialog={dialog}
+        setDialog={setDialog}
+        columns={columns}
+        formData={formData}
+        setFormData={setFormData}
+        addData={addData}
+        getData={getData}
+        addSuccessCallback={addSuccessCallback}
+      />
       <PageActions
         addData={addData}
         setDialog={setDialog}
@@ -41,7 +52,7 @@ const CRUDTable = ({
                 <TableCell
                   align="left"
                   key={el.key}
-                  // style={{ fontWeight: 600, color: "#888" }}
+                  style={{ fontWeight: 600, color: "#888" }}
                 >
                   {el.name}
                 </TableCell>
@@ -52,7 +63,7 @@ const CRUDTable = ({
             {!!rows?.length ? (
               rows.map((row, idx) => (
                 <CRUDTableRow
-                  key={row.name}
+                  key={row.id}
                   {...{
                     row,
                     colapseColumns,

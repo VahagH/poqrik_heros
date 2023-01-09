@@ -1,9 +1,8 @@
 import { makeStyles } from "@material-ui/core";
 import { forwardRef, useMemo } from "react";
 import { ListItem, ListItemText } from "@material-ui/core";
-
 import { NavLink, NavLinkProps } from "react-router-dom";
-import { PageProps } from "../../router";
+import { PageProps } from "../../support/types";
 
 const useStyles = makeStyles((theme) => ({
   nav: {
@@ -43,7 +42,12 @@ const ListItemLink = ({ link, icon }: ListItemProps) => {
     [link]
   );
   return (
-    <ListItem button {...{ component: renderLink }} className={classes.nav}>
+    <ListItem
+      button
+      {...{ component: renderLink }}
+      className={classes.nav}
+      disabled={link.disable}
+    >
       {icon ? icon : <ListItemText primary={link.name} />}
     </ListItem>
   );

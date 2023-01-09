@@ -1,25 +1,18 @@
 import React from "react";
+import { PageProps } from "./support/types";
 
-export const ROLES = ["user", "admin"];
-
-export interface PageProps {
-  name: string;
-  path: string;
-  navBar?: boolean;
-  component?: any;
-  role?: string[];
-  onClick?: () => void;
-}
 export const publicPages: PageProps[] = [
   {
     name: "Գլխավոր",
     path: "/",
+    disable: true,
     navBar: true,
     component: React.lazy(() => import("./pages/publicPages/Home")),
   },
   {
     name: "Տոնական",
     path: "/dresses",
+    disable: true,
     navBar: true,
     component: React.lazy(() => import("./pages/publicPages/Dresses")),
   },
@@ -27,11 +20,13 @@ export const publicPages: PageProps[] = [
     name: "Ընտրվածներ",
     path: "/favorites",
     navBar: false,
+    disable: true,
     component: React.lazy(() => import("./pages/publicPages/Favorites")),
   },
   {
     name: "Կերպարներ",
     path: "/shapes",
+    disable: true,
     navBar: true,
     component: React.lazy(() => import("./pages/publicPages/Shapes")),
   },
@@ -55,6 +50,7 @@ export const privatePages: PageProps[] = [
   {
     name: "Ամրագրումներ",
     path: "/reservation",
+    disable: true,
     navBar: true,
     component: React.lazy(() => import("./pages/privatePages/Reservations")),
   },
@@ -67,6 +63,7 @@ export const privatePages: PageProps[] = [
   {
     name: "Հաշվետվություն",
     path: "/report",
+    disable: true,
     navBar: true,
     component: React.lazy(() => import("./pages/privatePages/Reports")),
   },

@@ -1,12 +1,5 @@
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
 import { Route, Routes } from "react-router-dom";
-import {
-  PageProps,
-  privatePages,
-  privatePagesWithCode,
-  publicPages,
-} from "./router";
+import { privatePages, privatePagesWithCode, publicPages } from "./router";
 import NotFound from "./components/NotFound";
 import Loading from "./components/Loading/Loading";
 import { createContext, Suspense, useEffect, useState } from "react";
@@ -14,18 +7,8 @@ import { Container, Dialog, makeStyles } from "@material-ui/core";
 import packageJSON from "./../package.json";
 import NavBar from "./components/NavBar";
 import moment from "moment";
-const firebaseConfig = {
-  apiKey: "AIzaSyDVWDsAi1Ax-oe-9-DF9v2bI9f9PxQt_6E",
-  authDomain: "poqrikheros-af1ff.firebaseapp.com",
-  projectId: "poqrikheros-af1ff",
-  storageBucket: "poqrikheros-af1ff.appspot.com",
-  messagingSenderId: "202968855717",
-  appId: "1:202968855717:web:e9a1fcceef0d75f5f6c94c",
-  measurementId: "G-RC0FVJ0DM5",
-};
+import { PageProps } from "./support/types";
 
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
 const useStyles = makeStyles((theme) => ({
   wrapper: {
     width: "100%",
@@ -49,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
     background: theme.palette.primary.main,
     color: "#fff",
     alignItems: "center",
+    marginTop: 40,
   },
 }));
 

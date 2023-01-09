@@ -4,9 +4,19 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { CRUDDialogProps, DIALOG_TYPES } from "../../../support/types";
-import { Button, makeStyles } from "@material-ui/core";
+import {
+  ColumnProps,
+  CRUDDialogProps,
+  DIALOG_TYPES,
+} from "../../../support/types";
+import { Button, Grid, makeStyles } from "@material-ui/core";
 import { hexToRgbA } from "../../../support/supportFunctions";
+import CaseInput from "../../CaseInput";
+import _ from "lodash";
+import { ValidatorForm } from "react-material-ui-form-validator";
+import { useEffect, useState } from "react";
+import SubmitLoading from "../../SubmitLoading";
+import { useLocation } from "react-router-dom";
 
 function getSubmitText(data: string) {
   switch (data) {
@@ -48,51 +58,166 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const CRUDDialog = ({ dialog, setDialog }: CRUDDialogProps) => {
+const CRUDDialog = ({
+  dialog,
+  setDialog,
+  columns,
+  formData,
+  setFormData,
+  addData,
+  getData,
+  addSuccessCallback,
+}: CRUDDialogProps) => {
   const classes = useStyles();
+  const [error, setError] = useState<string | null>(null);
+  const [filteredColumns, setFilteredColumns] = useState<ColumnProps[]>([]);
+  const [submit, setSubmit] = useState<boolean>(false);
+  const location = useLocation();
+
   const handleClose = () => {
+    setError(null);
     setDialog(undefined);
+    setFormData(null);
   };
 
+  const handleChange = (key: string, value: string | number | any) => {
+    if (error) {
+      setError(null);
+    }
+    setFormData((prev: any) => ({ ...prev, [key]: value }));
+  };
+
+  const handleSubmit = () => {
+    setSubmit(true);
+    const newData = { ...formData };
+    columns
+      .filter((el: ColumnProps) => el.dontSend)
+      .forEach((el) => {
+        delete newData[el.key];
+      });
+    addData &&
+      addData(location.pathname === "/users" ? formData : newData)
+        .then((res: any) => {
+          if (addSuccessCallback) {
+            addSuccessCallback(newData, res.user.uid)
+              .then((res: any) => {
+                getData();
+                handleClose();
+              })
+              .catch((err: any) => {})
+              .finally(() => {
+                setSubmit(false);
+              });
+          } else {
+            getData();
+            handleClose();
+            setSubmit(false);
+          }
+        })
+        .catch((err: any) => {
+          if (err.code === "auth/email-already-in-use") {
+            setError("Էլ․ հասցեն գոյություն ունի");
+          } else {
+            setError("Տեղի է ունեցել սխալ, փորձեք կրկին։");
+          }
+          setSubmit(false);
+        });
+  };
+
+  useEffect(() => {
+    setFilteredColumns(
+      columns.filter(
+        (el: ColumnProps) =>
+          el.formTypes &&
+          dialog?.dialogType &&
+          el.formTypes.includes(dialog?.dialogType)
+      )
+    );
+  }, [dialog?.dialogType]);
+
+  useEffect(() => {
+    if (location.pathname === "/users") {
+      ValidatorForm.addValidationRule("isPasswordMatch", (value: string) => {
+        if (value !== formData?.password) {
+          return false;
+        }
+        return true;
+      });
+    }
+
+    return () => {
+      if (location.pathname === "/users") {
+        ValidatorForm.removeValidationRule("isPasswordMatch");
+      }
+    };
+  }, [formData?.password, formData?.confirmPassword]);
+
   return (
-    <Dialog
-      open={dialog?.open || false}
-      onClose={handleClose}
-      maxWidth={dialog?.dialogWidth || "md"}
-      fullWidth={true}
-    >
-      <DialogTitle>{dialog?.dialogTitle}</DialogTitle>
-      <DialogContent>
-        {dialog?.dialogSubtitle && (
-          <DialogContentText>{dialog.dialogSubtitle}</DialogContentText>
-        )}
-        <TextField
-          autoFocus
-          margin="dense"
-          id="name"
-          label="Email Address"
-          type="email"
-          fullWidth
-          variant="standard"
-        />
-      </DialogContent>
-      <DialogActions
-        style={{
-          justifyContent:
-            dialog?.dialogType === DIALOG_TYPES.delete ? "end" : "center",
-          marginBottom: 10,
-        }}
+    <>
+      <SubmitLoading submit={submit} />
+      <Dialog
+        open={dialog?.open || false}
+        onClose={handleClose}
+        maxWidth={dialog?.dialogWidth || "md"}
+        fullWidth={true}
       >
-        <Button onClick={handleClose} className={classes.cancelBtn}>
-          {dialog?.dialogType === DIALOG_TYPES.read ? "Փակել" : "Չեղարկել"}
-        </Button>
-        {dialog?.dialogType !== "read" && (
-          <Button onClick={handleClose} className={classes.submitBtn}>
-            {dialog?.dialogType ? getSubmitText(dialog?.dialogType || "") : ""}
-          </Button>
-        )}
-      </DialogActions>
-    </Dialog>
+        <DialogTitle>{dialog?.dialogTitle}</DialogTitle>
+        <ValidatorForm onSubmit={handleSubmit}>
+          <DialogContent>
+            {dialog?.dialogSubtitle && (
+              <DialogContentText>{dialog.dialogSubtitle}</DialogContentText>
+            )}
+            {error && (
+              <DialogContentText
+                style={{
+                  color: "red",
+                  background: "rgba(255, 99, 71, 0.1)",
+                  width: "max-content",
+                  padding: 10,
+                  marginBottom: 15,
+                }}
+              >
+                {error}
+              </DialogContentText>
+            )}
+            <Grid container spacing={2}>
+              {filteredColumns.map((el: ColumnProps) => (
+                <Grid item xs={12} md={el.mdGrid ? el.mdGrid : 6} key={el.key}>
+                  <CaseInput
+                    label={el.name}
+                    name={el.key}
+                    value={_.get(formData, el.key)}
+                    onChange={handleChange}
+                    type={el.type}
+                    options={el.options}
+                    minStringLength={el.minStringLength}
+                    confirming={el.confirming}
+                  />
+                </Grid>
+              ))}
+            </Grid>
+          </DialogContent>
+          <DialogActions
+            style={{
+              justifyContent:
+                dialog?.dialogType === DIALOG_TYPES.delete ? "end" : "center",
+              marginBottom: 10,
+            }}
+          >
+            <Button onClick={handleClose} className={classes.cancelBtn}>
+              {dialog?.dialogType === DIALOG_TYPES.read ? "Փակել" : "Չեղարկել"}
+            </Button>
+            {dialog?.dialogType !== "read" && (
+              <Button type="submit" className={classes.submitBtn}>
+                {dialog?.dialogType
+                  ? getSubmitText(dialog?.dialogType || "")
+                  : ""}
+              </Button>
+            )}
+          </DialogActions>
+        </ValidatorForm>
+      </Dialog>
+    </>
   );
 };
 
