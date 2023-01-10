@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
     background: theme.palette.primary.main,
     color: "#fff",
     alignItems: "center",
-    marginTop: 40,
+    marginTop: 70,
   },
 }));
 

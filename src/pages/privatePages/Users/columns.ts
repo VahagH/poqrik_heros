@@ -1,5 +1,9 @@
 import { CaseInputTypes } from "../../../components/CaseInput/CaseInput";
-import { DIALOG_TYPES, STATUS_OPTION } from "../../../support/types";
+import {
+  DIALOG_TYPES,
+  ROLE_OPTION,
+  STATUS_OPTION,
+} from "../../../support/types";
 
 export const columns = [
   {
@@ -17,7 +21,9 @@ export const columns = [
   {
     name: "Էլ․ հասցե",
     key: "email",
-    formTypes: [DIALOG_TYPES.add],
+    formTypes: [DIALOG_TYPES.add, DIALOG_TYPES.edit],
+    disabled: (row: any, dialogType: string) =>
+      dialogType === DIALOG_TYPES.edit,
     type: CaseInputTypes.EMAIL,
   },
   {
@@ -43,6 +49,14 @@ export const columns = [
     confirming: true,
     minStringLength: 6,
     dontSend: true,
+    hideColumnFromTable: true,
+  },
+  {
+    name: "Դեր",
+    key: "role",
+    formTypes: [DIALOG_TYPES.add, DIALOG_TYPES.edit],
+    type: CaseInputTypes.AUTOCOMPLETE,
+    options: ROLE_OPTION,
     hideColumnFromTable: true,
   },
   {

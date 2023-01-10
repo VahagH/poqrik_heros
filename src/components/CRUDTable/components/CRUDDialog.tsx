@@ -1,4 +1,3 @@
-import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -56,6 +55,9 @@ const useStyles = makeStyles((theme) => ({
     textTransform: "unset",
     color: "#666",
   },
+  dialogSubtitle: {
+    paddingLeft: 25,
+  },
 }));
 
 const CRUDDialog = ({
@@ -66,6 +68,10 @@ const CRUDDialog = ({
   setFormData,
   addData,
   getData,
+  updateData,
+  deleteData,
+  setEditedRow,
+  editedRow,
   addSuccessCallback,
 }: CRUDDialogProps) => {
   const classes = useStyles();
@@ -75,6 +81,7 @@ const CRUDDialog = ({
   const location = useLocation();
 
   const handleClose = () => {
+    setEditedRow(null);
     setError(null);
     setDialog(undefined);
     setFormData(null);
@@ -95,33 +102,49 @@ const CRUDDialog = ({
       .forEach((el) => {
         delete newData[el.key];
       });
-    addData &&
-      addData(location.pathname === "/users" ? formData : newData)
-        .then((res: any) => {
-          if (addSuccessCallback) {
-            addSuccessCallback(newData, res.user.uid)
-              .then((res: any) => {
+    switch (dialog?.dialogType) {
+      case DIALOG_TYPES.add:
+        addData &&
+          addData(location.pathname === "/users" ? formData : newData)
+            .then((res: any) => {
+              if (addSuccessCallback) {
+                addSuccessCallback(
+                  { ...newData, uid: res.user.uid },
+                  res.user.uid
+                ).finally(() => {
+                  getData();
+                  handleClose();
+                  setSubmit(false);
+                });
+              } else {
                 getData();
                 handleClose();
-              })
-              .catch((err: any) => {})
-              .finally(() => {
                 setSubmit(false);
-              });
-          } else {
-            getData();
-            handleClose();
-            setSubmit(false);
-          }
-        })
-        .catch((err: any) => {
-          if (err.code === "auth/email-already-in-use") {
-            setError("Էլ․ հասցեն գոյություն ունի");
-          } else {
-            setError("Տեղի է ունեցել սխալ, փորձեք կրկին։");
-          }
-          setSubmit(false);
-        });
+              }
+            })
+            .catch((err: any) => {
+              if (err.code === "auth/email-already-in-use") {
+                setError("Էլ․ հասցեն գոյություն ունի");
+              } else {
+                setError("Տեղի է ունեցել սխալ, փորձեք կրկին։");
+              }
+              setSubmit(false);
+            });
+        break;
+      case DIALOG_TYPES.edit:
+        updateData &&
+          updateData(newData, editedRow.uid)
+            .then((res: any) => {
+              getData();
+              handleClose();
+              setSubmit(false);
+            })
+            .catch((err: any) => {
+              setError("Տեղի է ունեցել սխալ, փորձեք կրկին։");
+              setSubmit(false);
+            });
+        break;
+    }
   };
 
   useEffect(() => {
@@ -162,11 +185,19 @@ const CRUDDialog = ({
         fullWidth={true}
       >
         <DialogTitle>{dialog?.dialogTitle}</DialogTitle>
+        {dialog?.dialogSubtitle && (
+          <DialogContentText
+            className={classes.dialogSubtitle}
+            style={{
+              textAlign:
+                dialog.dialogType === DIALOG_TYPES.delete ? "center" : "left",
+            }}
+          >
+            {dialog.dialogSubtitle}
+          </DialogContentText>
+        )}
         <ValidatorForm onSubmit={handleSubmit}>
           <DialogContent>
-            {dialog?.dialogSubtitle && (
-              <DialogContentText>{dialog.dialogSubtitle}</DialogContentText>
-            )}
             {error && (
               <DialogContentText
                 style={{
@@ -192,6 +223,10 @@ const CRUDDialog = ({
                     options={el.options}
                     minStringLength={el.minStringLength}
                     confirming={el.confirming}
+                    disabled={
+                      el.disabled &&
+                      el.disabled(editedRow, dialog?.dialogType || "")
+                    }
                   />
                 </Grid>
               ))}

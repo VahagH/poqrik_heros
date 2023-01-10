@@ -5,12 +5,28 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import TablePagination from "@mui/material/TablePagination";
 import { ColumnProps, CRUDTableProps } from "../../support/types";
 import CRUDTableRow from "./components/CRUDTableRow";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CircularProgress } from "@mui/material";
 import PageActions from "./components/PageActions";
 import CRUDDialog from "./components/CRUDDialog";
+import { makeStyles } from "@material-ui/core";
+
+const useStyles = makeStyles((theme) => ({
+  popover: {
+    position: "sticky",
+    right: 0,
+    top: 0,
+    width: 10,
+  },
+  pagination: {
+    position: "absolute",
+    bottom: 30,
+    right: 30,
+  },
+}));
 
 const CRUDTable = ({
   columns,
@@ -18,14 +34,40 @@ const CRUDTable = ({
   rows,
   addData,
   getData,
+  updateData,
+  deleteData,
   addSuccessCallback,
 }: CRUDTableProps) => {
+  const classes = useStyles();
   const [isSelected, setSelected] = useState<number | null>(null);
+  const [editedRow, setEditedRow] = useState<any>(null);
+  const [dialog, setDialog] = useState(undefined);
+  const [filteredRows, setFilteredRows] = useState<any>([]);
+  const [formData, setFormData] = useState(null);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(30);
   const filteredColumns = columns.filter((el) =>
     el.hideColumnFromTable ? !el.hideColumnFromTable : true
   );
-  const [dialog, setDialog] = useState(undefined);
-  const [formData, setFormData] = useState(null);
+
+  const handleChangePage = (
+    event: React.MouseEvent<HTMLButtonElement> | null,
+    newPage: number
+  ) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  useEffect(() => {
+    rows && setFilteredRows(rows);
+  }, [rows]);
+
   return (
     <>
       <CRUDDialog
@@ -36,12 +78,17 @@ const CRUDTable = ({
         setFormData={setFormData}
         addData={addData}
         getData={getData}
+        setEditedRow={setEditedRow}
+        editedRow={editedRow}
+        updateData={updateData}
         addSuccessCallback={addSuccessCallback}
       />
       <PageActions
         addData={addData}
         setDialog={setDialog}
         columns={columns.filter((el) => el.filterable)}
+        setFilteredRows={setFilteredRows}
+        rows={rows}
       />
       <TableContainer component={Paper}>
         <Table aria-label="collapsible table">
@@ -57,23 +104,37 @@ const CRUDTable = ({
                   {el.name}
                 </TableCell>
               ))}
+              {(updateData || deleteData) && (
+                <TableCell
+                  className={classes.popover}
+                  style={{ background: "#fff", maxWidth: 35, padding: 3 }}
+                />
+              )}
             </TableRow>
           </TableHead>
           <TableBody>
             {!!rows?.length ? (
-              rows.map((row, idx) => (
-                <CRUDTableRow
-                  key={row.id}
-                  {...{
-                    row,
-                    colapseColumns,
-                    idx,
-                    columns: filteredColumns,
-                    isSelected,
-                    setSelected,
-                  }}
-                />
-              ))
+              filteredRows
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((row: any, idx: number) => (
+                  <CRUDTableRow
+                    key={row.id}
+                    {...{
+                      row,
+                      colapseColumns,
+                      idx,
+                      columns,
+                      filteredColumns,
+                      setEditedRow,
+                      isSelected,
+                      setDialog,
+                      setSelected,
+                      updateData,
+                      deleteData,
+                      setFormData,
+                    }}
+                  />
+                ))
             ) : (
               <TableRow>
                 {rows === null ? (
@@ -90,6 +151,17 @@ const CRUDTable = ({
           </TableBody>
         </Table>
       </TableContainer>
+      <TablePagination
+        rowsPerPageOptions={[30, 50, 100, 300]}
+        component="div"
+        labelRowsPerPage="Տողերի քանակ"
+        count={filteredRows.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+        className={classes.pagination}
+      />
     </>
   );
 };

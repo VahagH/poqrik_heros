@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import Box from "@mui/material/Box";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -6,18 +6,24 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 
-interface MenuItemProps {
+export interface MenuItemProps {
   name: string;
   onClick: () => void;
   icon?: any;
+  hideAction?: boolean;
 }
 
 interface FadeMenuProps {
   icon?: any;
   menuItems: MenuItemProps[];
+  disable?: boolean;
 }
 
-export default function FadeMenu({ icon, menuItems }: FadeMenuProps) {
+export default function FadeMenu({
+  icon,
+  menuItems,
+  disable = false,
+}: FadeMenuProps) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -28,12 +34,23 @@ export default function FadeMenu({ icon, menuItems }: FadeMenuProps) {
   };
   return (
     <React.Fragment>
-      <Box sx={{ display: "flex", alignItems: "center", textAlign: "center" }}>
-        <Tooltip title="Account settings">
+      <Box
+        style={{
+          display: "flex",
+          alignItems: "center",
+          textAlign: "center",
+          overflow: "hidden",
+          width: 35,
+          margin: 0,
+          padding: 0,
+        }}
+      >
+        <Tooltip title="">
           <IconButton
             onClick={handleClick}
             size="small"
-            sx={{ ml: 2, color: "#000" }}
+            disabled={disable}
+            sx={{ color: "#A45EE5" }}
             aria-controls={open ? "account-menu" : undefined}
             aria-haspopup="true"
             aria-expanded={open ? "true" : undefined}
@@ -78,7 +95,7 @@ export default function FadeMenu({ icon, menuItems }: FadeMenuProps) {
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
         {menuItems.map((el: MenuItemProps) => (
-          <MenuItem key={el.name}>
+          <MenuItem key={el.name} onClick={el.onClick}>
             {el.icon && (
               <ListItemIcon style={{ marginRight: 15 }}>{el.icon}</ListItemIcon>
             )}

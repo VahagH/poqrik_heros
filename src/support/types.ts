@@ -18,11 +18,17 @@ export interface CaseInputProps {
 
 export interface CRUDTableRowProps {
   columns: ColumnProps[];
+  filteredColumns: ColumnProps[];
   colapseColumns?: any;
   row: any;
   idx: number;
   isSelected: number | null;
   setSelected: (idx: number) => void;
+  updateData?: (data: any, id: string) => any;
+  deleteData?: (id: string) => any;
+  setDialog: (data: any) => void;
+  setFormData: (data: any) => void;
+  setEditedRow: (data: any) => void;
 }
 
 export interface ColumnProps {
@@ -36,7 +42,7 @@ export interface ColumnProps {
   fullWidth?: boolean;
   formTypes?: string[];
   autoFocus?: boolean;
-  disabled?: boolean;
+  disabled?: (row: any, dialogType: string) => boolean;
   dontSend?: boolean;
   customStyle?: any;
   onlyRead?: boolean;
@@ -53,6 +59,8 @@ export interface CRUDTableProps {
   colapseColumns?: any;
   rows: any[] | null;
   addData?: (data: any) => any;
+  updateData?: (data: any, id: string) => any;
+  deleteData?: (id: string) => any;
   addSuccessCallback?: (data: any, id: string) => any;
   getData: () => void;
 }
@@ -65,13 +73,17 @@ export interface DialogProps {
 }
 export interface CRUDDialogProps {
   dialog: DialogProps | undefined;
-  setDialog: (data: undefined) => void;
   columns: ColumnProps[];
   formData: any;
+  editedRow: any;
+  setDialog: (data: undefined) => void;
+  updateData?: (data: any, id: string) => any;
+  deleteData?: (id: string) => any;
   setFormData: (data: string | number | any) => void;
   addData?: (data: any) => any;
   addSuccessCallback?: (data: any, id: string) => any;
   getData: () => void;
+  setEditedRow: (data: any) => void;
 }
 
 export const DIALOG_TYPES = {
@@ -86,12 +98,17 @@ export const STATUS_OPTION = [
   { name: "Ոչ ակտիվ", value: "inactive" },
 ];
 
+export const ROLE_OPTION = [
+  { name: "Ադմին", value: "admin" },
+  { name: "Օգտվող", value: "user" },
+];
+
 export interface AutocolpleteType {
   name: string;
   value: string;
 }
 
-export const ROLES = ["user", "admin"];
+export const ROLES = { user: "user", admin: "admin" };
 
 export interface PageProps {
   name: string;

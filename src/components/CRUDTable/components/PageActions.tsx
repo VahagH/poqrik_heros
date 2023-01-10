@@ -1,7 +1,5 @@
 import { Button, makeStyles } from "@material-ui/core";
 import { hexToRgbA } from "../../../support/supportFunctions";
-import SearchIcon from "@mui/icons-material/Search";
-import IconButton from "@mui/material/IconButton";
 import InputBase from "@mui/material/InputBase";
 import { ColumnProps, DIALOG_TYPES } from "../../../support/types";
 
@@ -9,6 +7,8 @@ export interface PageActionsProps {
   addData?: (data: any) => void;
   setDialog: (data: any) => void;
   columns: ColumnProps[];
+  rows: any;
+  setFilteredRows: (data: any) => void;
 }
 const useStyles = makeStyles((theme) => ({
   wrapper: {
@@ -32,7 +32,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const PageActions = ({ addData, setDialog, columns }: PageActionsProps) => {
+const PageActions = ({
+  addData,
+  setDialog,
+  columns,
+  setFilteredRows,
+  rows,
+}: PageActionsProps) => {
   const classes = useStyles();
   const handleDialogClick = () => {
     setDialog({
@@ -41,18 +47,29 @@ const PageActions = ({ addData, setDialog, columns }: PageActionsProps) => {
       dialogTitle: "Ավելացնել օգտվող",
     });
   };
+  const handleSearch = (search: string) => {
+    setFilteredRows(
+      rows.filter((el: any) => {
+        for (const key in el) {
+          if (el[key]?.toLowerCase().includes(search.toLowerCase())) {
+            return true;
+          }
+        }
+      })
+    );
+  };
 
   return (
     <div className={classes.wrapper}>
       <div style={{ border: "1px solid #eee", borderRadius: 12 }}>
         <InputBase
-          sx={{ width: 220, p: 1 }}
+          sx={{ width: 250, p: 1, paddingLeft: "15px" }}
           placeholder="Search"
           inputProps={{ "aria-label": "search google maps" }}
+          onChange={(event) => {
+            handleSearch(event.target.value);
+          }}
         />
-        <IconButton type="button" sx={{ p: "15px" }} aria-label="search">
-          <SearchIcon />
-        </IconButton>
       </div>
       <div>
         {addData && (
