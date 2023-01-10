@@ -13,9 +13,10 @@ import { hexToRgbA } from "../../../support/supportFunctions";
 import CaseInput from "../../CaseInput";
 import _ from "lodash";
 import { ValidatorForm } from "react-material-ui-form-validator";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import SubmitLoading from "../../SubmitLoading";
 import { useLocation } from "react-router-dom";
+import { ToastContext } from "../../../context/ToastProvider";
 
 function getSubmitText(data: string) {
   switch (data) {
@@ -78,6 +79,7 @@ const CRUDDialog = ({
   const [error, setError] = useState<string | null>(null);
   const [filteredColumns, setFilteredColumns] = useState<ColumnProps[]>([]);
   const [submit, setSubmit] = useState<boolean>(false);
+  const { dispatch: setToast } = useContext(ToastContext);
   const location = useLocation();
 
   const handleClose = () => {
@@ -111,12 +113,38 @@ const CRUDDialog = ({
                 addSuccessCallback(
                   { ...newData, uid: res.user.uid },
                   res.user.uid
-                ).finally(() => {
-                  getData();
-                  handleClose();
-                  setSubmit(false);
-                });
+                )
+                  .then((res: any) => {
+                    setToast({
+                      payload: {
+                        toastType: "success",
+                        open: true,
+                        message: "Դուք հաջողությոմբ ավելացրեցիք օգտվող։",
+                      },
+                    });
+                  })
+                  .catch((err: any) => {
+                    setToast({
+                      payload: {
+                        toastType: "error",
+                        open: true,
+                        message: err.message,
+                      },
+                    });
+                  })
+                  .finally(() => {
+                    getData();
+                    handleClose();
+                    setSubmit(false);
+                  });
               } else {
+                setToast({
+                  payload: {
+                    toastType: "success",
+                    open: true,
+                    message: "Դուք հաջողությոմբ ավելացրեցիք ինֆորմացիա։",
+                  },
+                });
                 getData();
                 handleClose();
                 setSubmit(false);
@@ -135,11 +163,25 @@ const CRUDDialog = ({
         updateData &&
           updateData(newData, editedRow.uid)
             .then((res: any) => {
+              setToast({
+                payload: {
+                  toastType: "success",
+                  open: true,
+                  message: "Դուք հաջողությոմբ խմբագրեցիք:",
+                },
+              });
               getData();
               handleClose();
               setSubmit(false);
             })
             .catch((err: any) => {
+              setToast({
+                payload: {
+                  toastType: "error",
+                  open: true,
+                  message: "Սխալ հարցում։",
+                },
+              });
               setError("Տեղի է ունեցել սխալ, փորձեք կրկին։");
               setSubmit(false);
             });

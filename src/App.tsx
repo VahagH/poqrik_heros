@@ -8,6 +8,7 @@ import packageJSON from "./../package.json";
 import NavBar from "./components/NavBar";
 import moment from "moment";
 import { PageProps } from "./support/types";
+import Toast from "./components/Toast";
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {
@@ -80,6 +81,7 @@ function App() {
         {/* disable if loged in */}
         &copy; {moment().year()}
       </div>
+      <Toast />
     </div>
   );
 }

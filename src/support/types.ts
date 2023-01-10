@@ -93,6 +93,12 @@ export const DIALOG_TYPES = {
   read: "read",
 };
 
+export const TOAST_TYPES = {
+  error: "error",
+  success: "success",
+  warning: "warning",
+};
+
 export const STATUS_OPTION = [
   { name: "Ակտիվ", value: "active" },
   { name: "Ոչ ակտիվ", value: "inactive" },
