@@ -198,7 +198,7 @@ const CRUDDialog = ({
           el.formTypes.includes(dialog?.dialogType)
       )
     );
-  }, [dialog?.dialogType]);
+  }, [dialog?.dialogType, columns]);
 
   useEffect(() => {
     if (location.pathname === "/users") {
@@ -215,7 +215,7 @@ const CRUDDialog = ({
         ValidatorForm.removeValidationRule("isPasswordMatch");
       }
     };
-  }, [formData?.password, formData?.confirmPassword]);
+  }, [formData?.password, formData?.confirmPassword, location.pathname]);
 
   return (
     <>

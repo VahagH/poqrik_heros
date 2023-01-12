@@ -5,10 +5,13 @@ import { columns } from "./columns";
 import _ from "lodash";
 import CaseInput from "../../../components/CaseInput";
 import { ColumnProps } from "../../../support/types";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { CircularProgress } from "@mui/material";
 import { hexToRgbA } from "../../../support/supportFunctions";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { auth } from "../../../firebase/firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { AuthContext } from "../../../context/AuthProvider";
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {
@@ -78,6 +81,8 @@ interface LogInProp {
 
 const LogIn = () => {
   const classes = useStyles();
+  const navigate = useNavigate();
+  const { dispatch: authDispatch } = useContext(AuthContext);
   const [clickInfo, setClickInfo] = useState<{
     submit?: boolean;
     error?: string;
@@ -91,18 +96,31 @@ const LogIn = () => {
     setFormData((prev) => ({ ...prev, [key]: value }));
   };
   const handleSubmit = () => {
-    // setClickInfo({ submit: true, error: "cascsa" });
+    setClickInfo({ submit: true, error: "" });
+    signInWithEmailAndPassword(auth, formData.email, formData.password)
+      .then((res) => {
+        localStorage.setItem("uid", res.user.uid);
+        localStorage.setItem("isAuthenticated", "true");
+
+        authDispatch({
+          type: "log_in",
+          payload: { isAuthenticated: true, uid: res.user.uid },
+        });
+
+        setClickInfo({ submit: false, error: "" });
+        navigate("/");
+      })
+      .catch((err) => {
+        if (err.message === "Firebase: Error (auth/wrong-password).") {
+          setClickInfo({
+            submit: false,
+            error: "Սխալ էլ․ հասցե կամ գաղտնաբառ",
+          });
+        } else {
+          setClickInfo({ submit: false, error: err.message });
+        }
+      });
   };
-
-  // useEffect(() => {
-  //   return () => {
-  //     localStorage.removeItem("adTo");
-  //   };
-  // }, []);
-
-  // if (value !== "3") {
-  //   return <Navigate to={"/dresses"} replace />;
-  // }
 
   return (
     <div className={classes.wrapper}>

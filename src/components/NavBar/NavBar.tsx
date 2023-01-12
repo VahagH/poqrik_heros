@@ -10,6 +10,9 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import Logout from "@mui/icons-material/Logout";
 import FadeMenu from "../FadeMenu";
 import PermIdentityIcon from "@mui/icons-material/PermIdentity";
+import { useContext } from "react";
+import { AuthContext } from "../../context/AuthProvider";
+import { ProfileContext } from "../../context/ProfileProvider";
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {
@@ -56,25 +59,40 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const menuItems = [
-  {
-    name: "Իմ էջը",
-    onClick: () => {},
-    icon: <PermIdentityIcon />,
-  },
-  {
-    name: "Դուրս գալ",
-    onClick: () => {},
-    icon: <Logout />,
-  },
-];
-
 const NavBar = () => {
   const classes = useStyles();
   const navigate = useNavigate();
+  const { state: authState, dispatch: authDispatch } = useContext(AuthContext);
+  const { state: profileState } = useContext(ProfileContext);
+
+  const menuItems = [
+    {
+      name: "Իմ էջը",
+      onClick: () => {
+        navigate("/profile");
+      },
+      icon: <PermIdentityIcon />,
+    },
+    {
+      name: "Դուրս գալ",
+      onClick: () => {
+        authDispatch({
+          type: "log_out",
+          isLogedIn: authState.isAuthenticated,
+        });
+      },
+      icon: <Logout />,
+    },
+  ];
   const filteredRoutes = [
     ...publicPages.filter((el) => el.navBar),
-    ...privatePages.filter((el) => el.navBar),
+    ...privatePages.filter(
+      (el) =>
+        el.navBar &&
+        authState.isAuthenticated &&
+        el.role?.includes(profileState.role) &&
+        profileState.status === "active"
+    ),
   ];
   const favLink = {
     name: "Ընտրվածներ",
@@ -106,7 +124,9 @@ const NavBar = () => {
               )
             }
           />
-          <FadeMenu icon={<PersonIcon />} menuItems={menuItems} />
+          {authState.isAuthenticated ? (
+            <FadeMenu icon={<PersonIcon />} menuItems={menuItems} />
+          ) : null}
         </div>
       </Container>
     </div>

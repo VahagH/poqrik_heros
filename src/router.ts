@@ -1,5 +1,5 @@
 import React from "react";
-import { PageProps } from "./support/types";
+import { PageProps, ROLES } from "./support/types";
 
 export const publicPages: PageProps[] = [
   {
@@ -53,12 +53,14 @@ export const privatePages: PageProps[] = [
     disable: true,
     navBar: true,
     component: React.lazy(() => import("./pages/privatePages/Reservations")),
+    role: [ROLES.admin, ROLES.user],
   },
   {
     name: "Օգտվողներ",
     path: "/users",
     navBar: true,
     component: React.lazy(() => import("./pages/privatePages/Users")),
+    role: [ROLES.admin],
   },
   {
     name: "Հաշվետվություն",
@@ -66,11 +68,13 @@ export const privatePages: PageProps[] = [
     disable: true,
     navBar: true,
     component: React.lazy(() => import("./pages/privatePages/Reports")),
+    role: [ROLES.admin],
   },
   {
     name: "Իմ էջը",
-    path: "/myAccount",
+    path: "/profile",
     navBar: false,
-    component: React.lazy(() => import("./pages/privatePages/Reports")),
+    component: React.lazy(() => import("./pages/privatePages/MyProfile")),
+    role: [ROLES.admin, ROLES.user],
   },
 ];

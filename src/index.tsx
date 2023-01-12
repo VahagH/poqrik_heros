@@ -5,6 +5,8 @@ import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider, createTheme } from "@material-ui/core";
 import ToastProvider from "./context/ToastProvider";
+import AuthProvider from "./context/AuthProvider";
+import ProfileProvider from "./context/ProfileProvider";
 
 const theme = createTheme({
   palette: {
@@ -27,13 +29,17 @@ const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
-  <ToastProvider>
-    <BrowserRouter>
-      <ThemeProvider theme={theme}>
-        <App />
-      </ThemeProvider>
-    </BrowserRouter>
-  </ToastProvider>
+  <AuthProvider>
+    <ProfileProvider>
+      <ToastProvider>
+        <BrowserRouter>
+          <ThemeProvider theme={theme}>
+            <App />
+          </ThemeProvider>
+        </BrowserRouter>
+      </ToastProvider>
+    </ProfileProvider>
+  </AuthProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function

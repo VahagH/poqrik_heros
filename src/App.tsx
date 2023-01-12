@@ -2,13 +2,15 @@ import { Route, Routes } from "react-router-dom";
 import { privatePages, privatePagesWithCode, publicPages } from "./router";
 import NotFound from "./components/NotFound";
 import Loading from "./components/Loading/Loading";
-import { createContext, Suspense, useEffect, useState } from "react";
-import { Container, Dialog, makeStyles } from "@material-ui/core";
-import packageJSON from "./../package.json";
+import { Suspense, useContext, useState } from "react";
+import { Container, makeStyles } from "@material-ui/core";
 import NavBar from "./components/NavBar";
 import moment from "moment";
 import { PageProps } from "./support/types";
 import Toast from "./components/Toast";
+import { AuthContext } from "./context/AuthProvider";
+import PrivateRoute from "./components/routes/PrivateRoute";
+import { ProfileContext } from "./context/ProfileProvider";
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {
@@ -40,6 +42,15 @@ const useStyles = makeStyles((theme) => ({
 function App() {
   const classes = useStyles();
   const [code, setCode] = useState(0);
+  const { state: authState } = useContext(AuthContext);
+  const { state: profileState } = useContext(ProfileContext);
+
+  const filterdRoutes = privatePages.filter(
+    (route: PageProps) =>
+      route.role?.includes(profileState.role) &&
+      profileState.status === "active"
+  );
+
   const handleClick = () => {
     setCode(code + 1);
   };
@@ -51,35 +62,43 @@ function App() {
         <Suspense fallback={<Loading />}>
           <Routes>
             {publicPages.map((el: PageProps) => (
-              <Route
-                key={el.path}
-                path={el.path}
-                element={<el.component />}
-              ></Route>
+              <Route key={el.path} path={el.path} element={<el.component />} />
             ))}
-            {privatePages.map((el: PageProps) => (
-              <Route
-                key={el.path}
-                path={el.path}
-                element={<el.component />}
-              ></Route>
-            ))}
+            {authState.isAuthenticated &&
+              filterdRoutes.map((el: PageProps) => (
+                <Route
+                  key={el.path}
+                  path={el.path}
+                  element={
+                    <PrivateRoute
+                      isAuthenticated={authState.isAuthenticated}
+                      role={el.role?.includes(profileState.role)}
+                      profileIsActive={profileState.status === "active"}
+                    >
+                      <el.component />
+                    </PrivateRoute>
+                  }
+                />
+              ))}
             {code === 3 &&
+              !authState.isAuthenticated &&
               privatePagesWithCode.map((el: PageProps) => (
                 <Route
                   key={el.path}
                   path={el.path}
                   element={<el.component code={code} />}
-                ></Route>
+                />
               ))}
-            <Route path="*" element={<NotFound />}></Route>
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
       </Container>
       <div className={classes.footer}>
-        Բոլոր իրա<span onClick={handleClick}>վ</span>ունքները պաշտպանված են:
-        {/* disable if loged in */}
-        &copy; {moment().year()}
+        Բոլոր իրա
+        <span onClick={() => !authState.isAuthenticated && handleClick()}>
+          վ
+        </span>
+        ունքները պաշտպանված են: &copy; {moment().year()}
       </div>
       <Toast />
     </div>
