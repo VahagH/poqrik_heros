@@ -20,7 +20,6 @@ import {
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import _ from "lodash";
 import FadeMenu from "../../FadeMenu";
-import { MenuItemProps } from "../../FadeMenu/FadeMenu";
 
 const useStyles = makeStyles((theme) => ({
   row: {
@@ -77,20 +76,21 @@ const CRUDTableRow = ({
           dialogTitle: "Խմբագրում",
         });
       },
-      hideAction: !!updateData,
+      hideAction: () => !!updateData,
     },
     {
       name: "Ջնջել",
       onClick: () => {
+        setEditedRow(row);
         setDialog({
           open: true,
           dialogType: DIALOG_TYPES.delete,
           dialogTitle: "Ջնջել",
           dialogSubtitle: "Հաստատեք ջնջումը",
-          dialogWidth: "sm",
+          dialogWidth: "xs",
         });
       },
-      hideAction: !!deleteData,
+      hideAction: () => !!deleteData,
     },
   ];
 
@@ -140,7 +140,7 @@ const CRUDTableRow = ({
                   _.get(row, column?.rowValueKey || column.key),
                   row
                 )
-              : _.get(row, column?.rowValueKey || column.key)}
+              : _.get(row, column?.rowValueKey || column.key) || "- - - "}
           </TableCell>
         ))}
         {(updateData || deleteData) && (
@@ -155,7 +155,7 @@ const CRUDTableRow = ({
           >
             <FadeMenu
               icon={<MoreVertIcon />}
-              menuItems={menuItems.filter((el: MenuItemProps) => el.hideAction)}
+              menuItems={menuItems}
               disable={false}
             />
           </TableCell>

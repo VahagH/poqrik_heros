@@ -1,4 +1,4 @@
-import { CircularProgress, makeStyles, useTheme } from "@material-ui/core";
+import { CircularProgress, makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {

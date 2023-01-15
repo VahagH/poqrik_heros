@@ -2,7 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import { privatePages, privatePagesWithCode, publicPages } from "./router";
 import NotFound from "./components/NotFound";
 import Loading from "./components/Loading/Loading";
-import { Suspense, useContext, useState } from "react";
+import { Suspense, useContext, useEffect, useState } from "react";
 import { Container, makeStyles } from "@material-ui/core";
 import NavBar from "./components/NavBar";
 import moment from "moment";
@@ -11,6 +11,7 @@ import Toast from "./components/Toast";
 import { AuthContext } from "./context/AuthProvider";
 import PrivateRoute from "./components/routes/PrivateRoute";
 import { ProfileContext } from "./context/ProfileProvider";
+import { auth } from "./firebase/firebase";
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {
@@ -24,6 +25,9 @@ const useStyles = makeStyles((theme) => ({
   container: {
     flexGrow: 1,
     marginTop: 30,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
   },
   footer: {
     height: 35,
@@ -35,14 +39,14 @@ const useStyles = makeStyles((theme) => ({
     background: theme.palette.primary.main,
     color: "#fff",
     alignItems: "center",
-    marginTop: 70,
+    // marginTop: 70,
   },
 }));
 
 function App() {
   const classes = useStyles();
   const [code, setCode] = useState(0);
-  const { state: authState } = useContext(AuthContext);
+  const { state: authState, dispatch: authDispatch } = useContext(AuthContext);
   const { state: profileState } = useContext(ProfileContext);
 
   const filterdRoutes = privatePages.filter(
@@ -54,6 +58,12 @@ function App() {
   const handleClick = () => {
     setCode(code + 1);
   };
+
+  useEffect(() => {
+    if (auth.currentUser?.uid && auth.currentUser.uid !== authState.uid) {
+      authDispatch({ type: "log_out" });
+    }
+  }, [authDispatch, authState.uid]);
 
   return (
     <div className={classes.wrapper}>

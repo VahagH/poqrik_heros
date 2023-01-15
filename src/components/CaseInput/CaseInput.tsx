@@ -3,6 +3,7 @@ import { TextValidator } from "react-material-ui-form-validator";
 import { CaseInputProps } from "../../support/types";
 import ReactInputMask from "react-input-mask";
 import { Autocomplete } from "@mui/material";
+import UploadImages from "../UploadImages";
 
 export const CaseInputTypes = {
   TEXT: "text",
@@ -12,6 +13,7 @@ export const CaseInputTypes = {
   TELEPHONE: "telephone",
   AUTOCOMPLETE: "autocomplete",
   TEXTAREA: "textarea",
+  UPLOAD_IMAGES: "upload",
 };
 
 const CaseInput = ({
@@ -24,9 +26,13 @@ const CaseInput = ({
   minStringLength = 0,
   fullWidth = true,
   autoFocus,
+  jsType,
+  placeHolder,
+  mask = "9999999999999999",
   helperText,
   disabled,
   error,
+  multiple,
   onlyRead = false,
   options,
   confirming = false,
@@ -36,9 +42,22 @@ const CaseInput = ({
       {label} <span style={{ fontSize: 17, color: "red" }}>*</span>
     </>
   ) : (
-    { label }
+    <>{label}</>
   );
   switch (type) {
+    case CaseInputTypes.UPLOAD_IMAGES:
+      return (
+        <UploadImages
+          label={newLabel}
+          multiple={multiple}
+          handleSubmit={onChange}
+          name={name}
+          disable={disabled}
+          value={value}
+          error={error}
+          helperText={helperText}
+        />
+      );
     case CaseInputTypes.TEXT:
       return (
         <TextValidator
@@ -63,6 +82,7 @@ const CaseInput = ({
               : []
           }
           error={error}
+          placeholder={placeHolder}
           inputProps={{
             autoComplete: "nope",
             readOnly: onlyRead,
@@ -74,9 +94,12 @@ const CaseInput = ({
     case CaseInputTypes.NUMBER:
       return (
         <ReactInputMask
-          mask="9999999999999999"
+          mask={mask}
           onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-            onChange(event.target.name, event.target.value);
+            onChange(
+              event.target.name,
+              jsType === "number" ? +event.target.value : event.target.value
+            );
           }}
           value={value || ""}
           maskChar={null}
@@ -91,6 +114,7 @@ const CaseInput = ({
               fullWidth={fullWidth}
               label={newLabel}
               name={name}
+              placeholder={placeHolder}
               value={value || ""}
               autoFocus={autoFocus}
               validators={isRequired ? ["required"] : []}
@@ -134,6 +158,7 @@ const CaseInput = ({
           }
           autoComplete="new-password"
           error={error}
+          placeholder={placeHolder}
           helperText={helperText}
           disabled={disabled}
           type="password"
@@ -190,6 +215,7 @@ const CaseInput = ({
               name={name}
               variant="outlined"
               margin="dense"
+              placeholder={placeHolder}
               inputProps={{
                 ...params.inputProps,
                 autoComplete: "nope",
@@ -224,6 +250,7 @@ const CaseInput = ({
               label={newLabel}
               value={value || ""}
               name={name}
+              placeholder={placeHolder}
               autoFocus={autoFocus}
               validators={isRequired ? ["required"] : []}
               errorMessages={isRequired ? ["Դաշտը պարտադիր է."] : []}
@@ -247,6 +274,7 @@ const CaseInput = ({
           name={name}
           value={value || ""}
           autoFocus={autoFocus}
+          placeholder={placeHolder}
           validators={isRequired ? ["required"] : []}
           errorMessages={isRequired ? ["Դաշտը պարտադիր է."] : []}
           error={error}

@@ -21,11 +21,6 @@ const useStyles = makeStyles((theme) => ({
     top: 0,
     width: 10,
   },
-  pagination: {
-    position: "absolute",
-    bottom: 30,
-    right: 30,
-  },
 }));
 
 const CRUDTable = ({
@@ -81,76 +76,83 @@ const CRUDTable = ({
         setEditedRow={setEditedRow}
         editedRow={editedRow}
         updateData={updateData}
+        deleteData={deleteData}
         addSuccessCallback={addSuccessCallback}
       />
-      <PageActions
-        addData={addData}
-        setDialog={setDialog}
-        columns={columns.filter((el) => el.filterable)}
-        setFilteredRows={setFilteredRows}
-        rows={rows}
-      />
-      <TableContainer component={Paper}>
-        <Table aria-label="collapsible table">
-          <TableHead>
-            <TableRow>
-              {colapseColumns && <TableCell />}
-              {filteredColumns.map((el: ColumnProps) => (
-                <TableCell
-                  align="left"
-                  key={el.key}
-                  style={{ fontWeight: 600, color: "#888" }}
-                >
-                  {el.name}
-                </TableCell>
-              ))}
-              {(updateData || deleteData) && (
-                <TableCell
-                  className={classes.popover}
-                  style={{ background: "#fff", maxWidth: 35, padding: 3 }}
-                />
-              )}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {!!rows?.length ? (
-              filteredRows
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row: any, idx: number) => (
-                  <CRUDTableRow
-                    key={row.id}
-                    {...{
-                      row,
-                      colapseColumns,
-                      idx,
-                      columns,
-                      filteredColumns,
-                      setEditedRow,
-                      isSelected,
-                      setDialog,
-                      setSelected,
-                      updateData,
-                      deleteData,
-                      setFormData,
-                    }}
-                  />
-                ))
-            ) : (
+      <div>
+        <PageActions
+          addData={addData}
+          setDialog={setDialog}
+          columns={columns.filter((el) => el.filterable)}
+          setFilteredRows={setFilteredRows}
+          rows={rows}
+        />
+        <TableContainer component={Paper}>
+          <Table aria-label="collapsible table">
+            <TableHead>
               <TableRow>
-                {rows === null ? (
-                  <TableCell align="center" colSpan={filteredColumns.length}>
-                    <CircularProgress size={25} color="secondary" />
+                {colapseColumns && <TableCell />}
+                {filteredColumns.map((el: ColumnProps) => (
+                  <TableCell
+                    align="left"
+                    key={el.key}
+                    style={{
+                      fontWeight: 600,
+                      color: "#888",
+                      minWidth: "70px",
+                    }}
+                  >
+                    {el.name}
                   </TableCell>
-                ) : (
-                  <TableCell align="center" colSpan={filteredColumns.length}>
-                    Դուք դեռ չեք ավելացրել ինֆորմացիա
-                  </TableCell>
+                ))}
+                {(updateData || deleteData) && (
+                  <TableCell
+                    className={classes.popover}
+                    style={{ background: "#fff", maxWidth: 35, padding: 3 }}
+                  />
                 )}
               </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {!!rows?.length ? (
+                filteredRows
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row: any, idx: number) => (
+                    <CRUDTableRow
+                      key={row.id}
+                      {...{
+                        row,
+                        colapseColumns,
+                        idx,
+                        columns,
+                        filteredColumns,
+                        setEditedRow,
+                        isSelected,
+                        setDialog,
+                        setSelected,
+                        updateData,
+                        deleteData,
+                        setFormData,
+                      }}
+                    />
+                  ))
+              ) : (
+                <TableRow>
+                  {rows === null ? (
+                    <TableCell align="center" colSpan={filteredColumns.length}>
+                      <CircularProgress size={25} color="secondary" />
+                    </TableCell>
+                  ) : (
+                    <TableCell align="center" colSpan={filteredColumns.length}>
+                      Դուք դեռ չեք ավելացրել ինֆորմացիա
+                    </TableCell>
+                  )}
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
       <TablePagination
         rowsPerPageOptions={[30, 50, 100, 300]}
         component="div"
@@ -160,7 +162,6 @@ const CRUDTable = ({
         page={page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
-        className={classes.pagination}
       />
     </>
   );

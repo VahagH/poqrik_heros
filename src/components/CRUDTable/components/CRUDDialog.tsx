@@ -9,7 +9,7 @@ import {
   DIALOG_TYPES,
 } from "../../../support/types";
 import { Button, Grid, makeStyles } from "@material-ui/core";
-import { hexToRgbA } from "../../../support/supportFunctions";
+import { clean, hexToRgbA } from "../../../support/supportFunctions";
 import CaseInput from "../../CaseInput";
 import _ from "lodash";
 import { ValidatorForm } from "react-material-ui-form-validator";
@@ -17,6 +17,7 @@ import { useEffect, useState, useContext } from "react";
 import SubmitLoading from "../../SubmitLoading";
 import { useLocation } from "react-router-dom";
 import { ToastContext } from "../../../context/ToastProvider";
+import Alert from "@mui/material/Alert";
 
 function getSubmitText(data: string) {
   switch (data) {
@@ -63,16 +64,16 @@ const useStyles = makeStyles((theme) => ({
 
 const CRUDDialog = ({
   dialog,
-  setDialog,
   columns,
   formData,
+  editedRow,
+  setDialog,
   setFormData,
   addData,
   getData,
   updateData,
   deleteData,
   setEditedRow,
-  editedRow,
   addSuccessCallback,
 }: CRUDDialogProps) => {
   const classes = useStyles();
@@ -107,7 +108,9 @@ const CRUDDialog = ({
     switch (dialog?.dialogType) {
       case DIALOG_TYPES.add:
         addData &&
-          addData(location.pathname === "/users" ? formData : newData)
+          addData(
+            location.pathname === "/users" ? clean(formData) : clean(newData)
+          )
             .then((res: any) => {
               if (addSuccessCallback) {
                 addSuccessCallback(
@@ -161,13 +164,40 @@ const CRUDDialog = ({
         break;
       case DIALOG_TYPES.edit:
         updateData &&
-          updateData(newData, editedRow.uid)
+          updateData(clean(newData), editedRow?.uid || editedRow.id)
             .then((res: any) => {
               setToast({
                 payload: {
                   toastType: "success",
                   open: true,
                   message: "Դուք հաջողությոմբ խմբագրեցիք:",
+                },
+              });
+              getData();
+              handleClose();
+              setSubmit(false);
+            })
+            .catch((err: any) => {
+              setToast({
+                payload: {
+                  toastType: "error",
+                  open: true,
+                  message: "Սխալ հարցում։",
+                },
+              });
+              setError("Տեղի է ունեցել սխալ, փորձեք կրկին։");
+              setSubmit(false);
+            });
+        break;
+      case DIALOG_TYPES.delete:
+        deleteData &&
+          deleteData(editedRow.id)
+            .then((res: any) => {
+              setToast({
+                payload: {
+                  toastType: "success",
+                  open: true,
+                  message: "Դուք հաջողությոմբ Ջնջեցիք:",
                 },
               });
               getData();
@@ -240,19 +270,7 @@ const CRUDDialog = ({
         )}
         <ValidatorForm onSubmit={handleSubmit}>
           <DialogContent>
-            {error && (
-              <DialogContentText
-                style={{
-                  color: "red",
-                  background: "rgba(255, 99, 71, 0.1)",
-                  width: "max-content",
-                  padding: 10,
-                  marginBottom: 15,
-                }}
-              >
-                {error}
-              </DialogContentText>
-            )}
+            {error && <Alert severity="error">{error}</Alert>}
             <Grid container spacing={2}>
               {filteredColumns.map((el: ColumnProps) => (
                 <Grid item xs={12} md={el.mdGrid ? el.mdGrid : 6} key={el.key}>
@@ -262,12 +280,18 @@ const CRUDDialog = ({
                     value={_.get(formData, el.key)}
                     onChange={handleChange}
                     type={el.type}
+                    jsType={el.jsType}
+                    mask={el.mask}
                     options={el.options}
+                    onlyRead={el.onlyRead}
+                    multiple={el.multiple}
+                    placeHolder={el.placeHolder}
+                    isRequired={el?.isRequired}
                     minStringLength={el.minStringLength}
                     confirming={el.confirming}
                     disabled={
                       el.disabled &&
-                      el.disabled(editedRow, dialog?.dialogType || "")
+                      el.disabled(formData, dialog?.dialogType || "", editedRow)
                     }
                   />
                 </Grid>

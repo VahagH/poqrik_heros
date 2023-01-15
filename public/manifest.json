@@ -1,5 +1,5 @@
 {
-  "short_name": "React App",
+  "short_name": "Փոքրիկ Հերոս",
   "name": "Create React App Sample",
   "icons": [
     {
@@ -8,13 +8,13 @@
       "type": "image/x-icon"
     },
     {
-      "src": "logo192.png",
-      "type": "image/png",
+      "src": "logo192.svg",
+      "type": "image/x-icon",
       "sizes": "192x192"
     },
     {
-      "src": "logo512.png",
-      "type": "image/png",
+      "src": "logo512.svg",
+      "type": "image/x-icon",
       "sizes": "512x512"
     }
   ],

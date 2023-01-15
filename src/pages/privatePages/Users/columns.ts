@@ -1,11 +1,12 @@
 import { CaseInputTypes } from "../../../components/CaseInput/CaseInput";
 import {
+  ColumnProps,
   DIALOG_TYPES,
   ROLE_OPTION,
   STATUS_OPTION,
 } from "../../../support/types";
 
-export const columns = [
+export const columns: ColumnProps[] = [
   {
     name: "Անուն",
     key: "firstName",
@@ -22,7 +23,7 @@ export const columns = [
     name: "Էլ․ հասցե",
     key: "email",
     formTypes: [DIALOG_TYPES.add, DIALOG_TYPES.edit],
-    disabled: (row: any, dialogType: string) =>
+    disabled: (formData: any, dialogType: string) =>
       dialogType === DIALOG_TYPES.edit,
     type: CaseInputTypes.EMAIL,
   },

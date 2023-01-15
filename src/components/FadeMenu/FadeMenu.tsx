@@ -1,16 +1,18 @@
-import React from "react";
+import React, { useContext } from "react";
 import Box from "@mui/material/Box";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
+import { AuthContext } from "../../context/AuthProvider";
+import { ProfileContext } from "../../context/ProfileProvider";
 
 export interface MenuItemProps {
   name: string;
   onClick: () => void;
   icon?: any;
-  hideAction?: boolean;
+  hideAction?: (isLogedIn: boolean, role: string) => boolean;
 }
 
 interface FadeMenuProps {
@@ -26,6 +28,15 @@ export default function FadeMenu({
 }: FadeMenuProps) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+
+  const { state: authState } = useContext(AuthContext);
+  const { state: profileState } = useContext(ProfileContext);
+
+  const filteredItems = menuItems.filter((item: MenuItemProps) =>
+    item.hideAction
+      ? item.hideAction(authState.isAuthenticated, profileState.role)
+      : true
+  );
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -94,7 +105,7 @@ export default function FadeMenu({
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        {menuItems.map((el: MenuItemProps) => (
+        {filteredItems.map((el: MenuItemProps) => (
           <MenuItem key={el.name} onClick={el.onClick}>
             {el.icon && (
               <ListItemIcon style={{ marginRight: 15 }}>{el.icon}</ListItemIcon>

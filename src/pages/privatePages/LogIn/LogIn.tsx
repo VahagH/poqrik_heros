@@ -11,6 +11,7 @@ import { hexToRgbA } from "../../../support/supportFunctions";
 import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../../../firebase/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import Alert from "@mui/material/Alert";
 import { AuthContext } from "../../../context/AuthProvider";
 
 const useStyles = makeStyles((theme) => ({
@@ -54,9 +55,10 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   error: {
-    margin: 5,
+    margin: "20px 20px",
     color: "red",
-    height: 20,
+    height: "max-content",
+    width: "95%",
   },
   inputCont: {
     display: "flex",
@@ -77,6 +79,17 @@ const useStyles = makeStyles((theme) => ({
 interface LogInProp {
   email: string;
   password: string;
+}
+
+function getMessage(message: string) {
+  switch (message) {
+    case "Firebase: Error (auth/wrong-password).":
+      return "Սխալ էլ․ հասցե կամ գաղտնաբառ";
+    case "Firebase: Error (auth/user-disabled).":
+      return "Էլ․ հասցեն բլոկավորված է։";
+    default:
+      return message;
+  }
 }
 
 const LogIn = () => {
@@ -111,14 +124,10 @@ const LogIn = () => {
         navigate("/");
       })
       .catch((err) => {
-        if (err.message === "Firebase: Error (auth/wrong-password).") {
-          setClickInfo({
-            submit: false,
-            error: "Սխալ էլ․ հասցե կամ գաղտնաբառ",
-          });
-        } else {
-          setClickInfo({ submit: false, error: err.message });
-        }
+        setClickInfo({
+          submit: false,
+          error: getMessage(err.message),
+        });
       });
   };
 
@@ -126,7 +135,11 @@ const LogIn = () => {
     <div className={classes.wrapper}>
       <div className={classes.container}>
         <img src={logo} alt="" height="100px" />
-        <div className={classes.error}>{clickInfo?.error}</div>
+        {clickInfo?.error && (
+          <Alert className={classes.error} severity="error">
+            {clickInfo?.error}
+          </Alert>
+        )}
         <ValidatorForm onSubmit={handleSubmit} className={classes.valdate}>
           <div className={classes.inputCont}>
             <div>

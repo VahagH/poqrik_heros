@@ -13,6 +13,8 @@ import PermIdentityIcon from "@mui/icons-material/PermIdentity";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthProvider";
 import { ProfileContext } from "../../context/ProfileProvider";
+import CheckroomIcon from "@mui/icons-material/Checkroom";
+// import SettingsIcon from "@mui/icons-material/Settings";
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {
@@ -72,6 +74,24 @@ const NavBar = () => {
         navigate("/profile");
       },
       icon: <PermIdentityIcon />,
+    },
+    // {
+    //   name: "Կարգավորումներ",
+    //   onClick: () => {
+    //     navigate("/settings");
+    //   },
+    //   icon: <SettingsIcon />,
+    //   hideAction: (isLogedIn: boolean, role: string) =>
+    //     isLogedIn && role === "admin",
+    // },
+    {
+      name: "Տեսականի",
+      onClick: () => {
+        navigate("/assortment");
+      },
+      icon: <CheckroomIcon />,
+      hideAction: (isLogedIn: boolean, role: string) =>
+        isLogedIn && role === "admin",
     },
     {
       name: "Դուրս գալ",

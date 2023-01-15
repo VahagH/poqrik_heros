@@ -14,3 +14,40 @@ export function hexToRgbA(hex: any, opacity: any) {
   }
   throw new Error("Bad Hex");
 }
+
+export function clean(obj: any) {
+  const newObject = { ...obj };
+  for (const propName in newObject) {
+    if (newObject[propName] === undefined) delete newObject[propName];
+    if (typeof newObject[propName] === "string") newObject[propName].trim();
+  }
+  return newObject;
+}
+
+export const timeZoneDateTime = (timestamp: number) => {
+  const newDate = new Date(timestamp * 1000);
+  const offset = newDate.getTimezoneOffset();
+  const date = new Date(timestamp * 1000 - offset * 60000);
+
+  let year = date.getUTCFullYear();
+  let month: string | number = date.getUTCMonth() + 1;
+  let day: string | number = date.getUTCDate();
+  let hours: string | number = date.getUTCHours();
+  let minutes: string | number = date.getUTCMinutes();
+
+  month = month < 10 ? "0" + month : month;
+  day = day < 10 ? "0" + day : day;
+  hours = hours < 10 ? "0" + hours : hours;
+  minutes = minutes < 10 ? "0" + minutes : minutes;
+
+  return day + "-" + month + "-" + year + " " + hours + ":" + minutes;
+};
+
+export const currencyFormatterDecimal = (val: number) => {
+  const roundVal = Math.floor(val * 100) / 100;
+  const newVal = roundVal.toFixed(2).replace(".", ".");
+  return newVal
+    .toString()
+    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+    .concat(" Դ");
+};

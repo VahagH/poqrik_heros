@@ -1,5 +1,6 @@
 import React, { createContext, useReducer, Dispatch, useEffect } from "react";
 import { auth } from "../firebase/firebase";
+import { onAuthStateChanged } from "firebase/auth";
 
 const initialState = {
   isAuthenticated: false,
@@ -48,7 +49,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const isAuthenticated = localStorage.getItem("isAuthenticated");
     const uid = localStorage.getItem("uid");
-    let bool;
+    let bool: boolean = false;
     if (isAuthenticated) {
       bool = JSON.parse(isAuthenticated);
     }
@@ -58,6 +59,16 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           payload: { isAuthenticated: true, uid: uid },
         })
       : dispatch({ type: "log_out", isLogedIn: bool });
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        if (uid && user.uid !== uid) {
+          console.log("uid", uid);
+          console.log("user.uid", user.uid);
+          dispatch({ type: "log_out", isLogedIn: bool });
+        }
+      }
+    });
   }, []);
 
   return (

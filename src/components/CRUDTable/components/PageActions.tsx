@@ -51,10 +51,19 @@ const PageActions = ({
     setFilteredRows(
       rows.filter((el: any) => {
         for (const key in el) {
-          if (el[key]?.toLowerCase().includes(search.toLowerCase())) {
+          if (
+            typeof el[key] === "string" &&
+            el[key]?.toLowerCase().includes(search.toLowerCase())
+          ) {
+            return true;
+          } else if (
+            typeof el[key] === "number" &&
+            String(el[key])?.toLowerCase().includes(search.toLowerCase())
+          ) {
             return true;
           }
         }
+        return false;
       })
     );
   };

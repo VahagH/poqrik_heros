@@ -7,7 +7,11 @@ export interface CaseInputProps {
   isRequired?: boolean;
   minStringLength?: number;
   fullWidth?: boolean;
+  mask?: any;
+  multiple?: boolean;
   autoFocus?: boolean;
+  placeHolder?: string;
+  jsType?: string;
   helperText?: string | null;
   disabled?: boolean;
   error?: boolean;
@@ -40,9 +44,14 @@ export interface ColumnProps {
   hideColumnFromTable?: boolean;
   filterable?: boolean;
   fullWidth?: boolean;
+  mask?: any;
+  multiple?: boolean;
+  hideInputFromDialog?: (el: any, formData: any, dialogType: string) => void;
   formTypes?: string[];
+  jsType?: string;
   autoFocus?: boolean;
-  disabled?: (row: any, dialogType: string) => boolean;
+  placeHolder?: string;
+  disabled?: (formData: any, dialogType: string, row: any) => boolean;
   dontSend?: boolean;
   customStyle?: any;
   onlyRead?: boolean;
@@ -102,6 +111,10 @@ export const TOAST_TYPES = {
 export const STATUS_OPTION = [
   { name: "Ակտիվ", value: "active" },
   { name: "Ոչ ակտիվ", value: "inactive" },
+];
+export const ASSORTMENT_OPTION = [
+  { name: "Տոնական", value: "dress" },
+  { name: "Կերպար", value: "shape" },
 ];
 
 export const ROLE_OPTION = [

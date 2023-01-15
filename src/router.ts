@@ -12,7 +12,6 @@ export const publicPages: PageProps[] = [
   {
     name: "Տոնական",
     path: "/dresses",
-    disable: true,
     navBar: true,
     component: React.lazy(() => import("./pages/publicPages/Dresses")),
   },
@@ -26,7 +25,6 @@ export const publicPages: PageProps[] = [
   {
     name: "Կերպարներ",
     path: "/shapes",
-    disable: true,
     navBar: true,
     component: React.lazy(() => import("./pages/publicPages/Shapes")),
   },
@@ -76,5 +74,12 @@ export const privatePages: PageProps[] = [
     navBar: false,
     component: React.lazy(() => import("./pages/privatePages/MyProfile")),
     role: [ROLES.admin, ROLES.user],
+  },
+  {
+    name: "Տեսականի",
+    path: "/assortment",
+    navBar: false,
+    component: React.lazy(() => import("./pages/privatePages/Assortment")),
+    role: [ROLES.admin],
   },
 ];
