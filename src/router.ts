@@ -47,7 +47,7 @@ export const privatePagesWithCode: PageProps[] = [
 export const privatePages: PageProps[] = [
   {
     name: "Ամրագրումներ",
-    path: "/reservation",
+    path: "/reservations",
     disable: true,
     navBar: true,
     component: React.lazy(() => import("./pages/privatePages/Reservations")),
@@ -62,7 +62,7 @@ export const privatePages: PageProps[] = [
   },
   {
     name: "Հաշվետվություն",
-    path: "/report",
+    path: "/reports",
     disable: true,
     navBar: true,
     component: React.lazy(() => import("./pages/privatePages/Reports")),

@@ -4,14 +4,14 @@ import NotFound from "./components/NotFound";
 import Loading from "./components/Loading/Loading";
 import { Suspense, useContext, useEffect, useState } from "react";
 import { Container, makeStyles } from "@material-ui/core";
-import NavBar from "./components/NavBar";
-import moment from "moment";
+import NavBar from "./pages/publicPages/NavBar";
 import { PageProps } from "./support/types";
 import Toast from "./components/Toast";
 import { AuthContext } from "./context/AuthProvider";
 import PrivateRoute from "./components/routes/PrivateRoute";
 import { ProfileContext } from "./context/ProfileProvider";
 import { auth } from "./firebase/firebase";
+import Footer from "./pages/publicPages/Footer";
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {
@@ -26,20 +26,9 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     marginTop: 30,
     display: "flex",
+    minHeight: "75vh",
     flexDirection: "column",
     justifyContent: "space-between",
-  },
-  footer: {
-    height: 35,
-    display: "flex",
-    justifyContent: "center",
-    fontSize: 14,
-    cursor: "default",
-    fontWeight: 400,
-    background: theme.palette.primary.main,
-    color: "#fff",
-    alignItems: "center",
-    // marginTop: 70,
   },
 }));
 
@@ -103,13 +92,10 @@ function App() {
           </Routes>
         </Suspense>
       </Container>
-      <div className={classes.footer}>
-        Բոլոր իրա
-        <span onClick={() => !authState.isAuthenticated && handleClick()}>
-          վ
-        </span>
-        ունքները պաշտպանված են: &copy; {moment().year()}
-      </div>
+      <Footer
+        isAuthenticated={authState.isAuthenticated}
+        handleClick={handleClick}
+      />
       <Toast />
     </div>
   );

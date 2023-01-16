@@ -1,18 +1,18 @@
 import { makeStyles, Container } from "@material-ui/core";
 import { List } from "@mui/material";
-import { privatePages, publicPages } from "../../router";
-import ListItemLink from "../ListItemLink";
-import logo from "../../assets/logo.svg";
+import { privatePages, publicPages } from "../../../router";
+import ListItemLink from "../../../components/ListItemLink";
+import logo from "../../../assets/logo.svg";
 import { useNavigate } from "react-router-dom";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import PersonIcon from "@mui/icons-material/Person";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import Logout from "@mui/icons-material/Logout";
-import FadeMenu from "../FadeMenu";
+import FadeMenu from "../../../components/FadeMenu";
 import PermIdentityIcon from "@mui/icons-material/PermIdentity";
 import { useContext } from "react";
-import { AuthContext } from "../../context/AuthProvider";
-import { ProfileContext } from "../../context/ProfileProvider";
+import { AuthContext } from "../../../context/AuthProvider";
+import { ProfileContext } from "../../../context/ProfileProvider";
 import CheckroomIcon from "@mui/icons-material/Checkroom";
 // import SettingsIcon from "@mui/icons-material/Settings";
 
