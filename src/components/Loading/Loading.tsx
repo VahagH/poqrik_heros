@@ -2,6 +2,7 @@ import { CircularProgress, makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {
+    minHeight: "80vh",
     height: "100%",
     display: "flex",
     justifyContent: "center",

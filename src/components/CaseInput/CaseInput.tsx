@@ -70,6 +70,7 @@ const CaseInput = ({
           label={newLabel}
           name={name}
           value={value || ""}
+          autoComplete="no"
           autoFocus={autoFocus}
           validators={
             isRequired
@@ -84,7 +85,7 @@ const CaseInput = ({
           error={error}
           placeholder={placeHolder}
           inputProps={{
-            autoComplete: "nope",
+            autoComplete: "no",
             readOnly: onlyRead,
           }}
           helperText={helperText}

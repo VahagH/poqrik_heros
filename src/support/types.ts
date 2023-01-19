@@ -46,27 +46,28 @@ export interface ColumnProps {
   fullWidth?: boolean;
   mask?: any;
   multiple?: boolean;
-  hideInputFromDialog?: (el: any, formData: any, dialogType: string) => void;
   formTypes?: string[];
   jsType?: string;
   autoFocus?: boolean;
   placeHolder?: string;
-  disabled?: (formData: any, dialogType: string, row: any) => boolean;
   dontSend?: boolean;
   customStyle?: any;
   onlyRead?: boolean;
-  customElement?: (el: any, row: any) => any;
   rowValueKey?: string;
   rowLabelKey?: string;
   mdGrid?: any;
   options?: AutocolpleteType[];
   confirming?: boolean;
+  disabled?: (formData: any, dialogType: string, row: any) => boolean;
+  customElement?: (el: any, row: any) => any;
+  hideInputFromDialog?: (el: any, formData: any, dialogType: string) => void;
 }
 
 export interface CRUDTableProps {
   columns: ColumnProps[];
   colapseColumns?: any;
   rows: any[] | null;
+  validate?: (formData: any, setInputError: (data: any) => void) => boolean;
   addData?: (data: any) => any;
   updateData?: (data: any, id: string) => any;
   deleteData?: (id: string) => any;
@@ -85,6 +86,7 @@ export interface CRUDDialogProps {
   columns: ColumnProps[];
   formData: any;
   editedRow: any;
+  validate?: (formData: any, setInputError: (data: any) => void) => boolean;
   setDialog: (data: undefined) => void;
   updateData?: (data: any, id: string) => any;
   deleteData?: (id: string) => any;
@@ -118,6 +120,11 @@ export const ASSORTMENT_OPTION = [
 ];
 
 export const ROLE_OPTION = [
+  { name: "Ադմին", value: "admin" },
+  { name: "Օգտվող", value: "user" },
+];
+
+export const COLORS = [
   { name: "Ադմին", value: "admin" },
   { name: "Օգտվող", value: "user" },
 ];

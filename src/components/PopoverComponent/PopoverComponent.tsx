@@ -114,7 +114,15 @@ const PopoverComponent = ({
           e.stopPropagation();
         }}
       >
-        <div style={{ padding: 10 }}> {children}</div>
+        <div
+          style={{
+            padding: 10,
+            minWidth: 300,
+            maxWidth: 600,
+          }}
+        >
+          {children}
+        </div>
       </Popover>
     </>
   );

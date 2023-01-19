@@ -32,11 +32,11 @@ const reducer = (state: StateProps, action: Action) => {
       return { ...state, isAuthenticated: true, uid: action.payload.uid };
     case "log_out":
       auth.signOut();
-      localStorage.clear();
+      localStorage.removeItem("isAuthenticated");
+      localStorage.removeItem("uid");
       if (action?.isLogedIn) {
         window.location.href = "/";
       }
-
       return { ...state, isAuthenticated: false, uid: "" };
     default:
       return state;
@@ -63,8 +63,6 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         if (uid && user.uid !== uid) {
-          console.log("uid", uid);
-          console.log("user.uid", user.uid);
           dispatch({ type: "log_out", isLogedIn: bool });
         }
       }

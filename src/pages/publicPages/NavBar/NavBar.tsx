@@ -1,5 +1,5 @@
 import { makeStyles, Container } from "@material-ui/core";
-import { List } from "@mui/material";
+import { Badge, List } from "@mui/material";
 import { privatePages, publicPages } from "../../../router";
 import ListItemLink from "../../../components/ListItemLink";
 import logo from "../../../assets/logo.svg";
@@ -133,14 +133,23 @@ const NavBar = () => {
             <ListItemLink link={el} key={el.path} />
           ))}
         </List>
-        <div style={{ display: "flex" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "end",
+            minHeight: 50,
+            minWidth: 110,
+          }}
+        >
           <ListItemLink
             link={favLink}
             icon={
-              localStorage.getItem("poqrikHeros_Favorites") ? (
-                <FavoriteIcon />
+              profileState.favorites.length ? (
+                <Badge badgeContent={profileState.favorites.length} max={99}>
+                  <FavoriteIcon style={{ opacity: 0.6 }} />
+                </Badge>
               ) : (
-                <FavoriteBorderIcon />
+                <FavoriteBorderIcon style={{ opacity: 0.5 }} />
               )
             }
           />

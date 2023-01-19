@@ -2,6 +2,7 @@ import { collection, getDocs, query, where } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import Loading from "../../../components/Loading/Loading";
 import { db } from "../../../firebase/firebase";
+import Data from "../../../components/Data";
 
 const Dresses = () => {
   const [data, setData] = useState<any[] | null>(null);
@@ -24,9 +25,10 @@ const Dresses = () => {
     getData();
   }, []);
 
-  if (!data) return <Loading />;
-
-  return <div>Dresses</div>;
+  if (!data) {
+    return <Loading />;
+  }
+  return <Data {...{ data, title: "Տոնական" }} />;
 };
 
 export default Dresses;

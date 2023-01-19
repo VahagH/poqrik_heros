@@ -15,20 +15,33 @@ import Footer from "./pages/publicPages/Footer";
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {
-    width: "100%",
-    height: "100vh",
-    overflowX: "hidden",
-    overflowY: "auto",
     display: "flex",
     flexDirection: "column",
+    minHeight: "100vh",
+    overflow: "hidden",
+  },
+  content: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingTop: 30,
+    overflowY: "auto",
+    flexGrow: 1,
+
+    minHeight: "80vh",
+    // background: "#faebd7",
   },
   container: {
+    paddingTop: 5,
     flexGrow: 1,
-    marginTop: 30,
     display: "flex",
-    minHeight: "75vh",
-    flexDirection: "column",
     justifyContent: "space-between",
+    flexDirection: "column",
+    position: "relative",
+    "& .MuiContainer-root": {
+      padding: 0,
+    },
   },
 }));
 
@@ -49,7 +62,13 @@ function App() {
   };
 
   useEffect(() => {
-    if (auth.currentUser?.uid && auth.currentUser.uid !== authState.uid) {
+    if (
+      auth.currentUser?.uid &&
+      authState?.uid &&
+      auth.currentUser.uid !== authState.uid
+    ) {
+      localStorage.setItem("appcurrent", auth.currentUser.uid);
+      localStorage.setItem("appAuth", authState.uid);
       authDispatch({ type: "log_out" });
     }
   }, [authDispatch, authState.uid]);
@@ -57,41 +76,51 @@ function App() {
   return (
     <div className={classes.wrapper}>
       <NavBar />
-      <Container className={classes.container}>
-        <Suspense fallback={<Loading />}>
-          <Routes>
-            {publicPages.map((el: PageProps) => (
-              <Route key={el.path} path={el.path} element={<el.component />} />
-            ))}
-            {authState.isAuthenticated &&
-              filterdRoutes.map((el: PageProps) => (
-                <Route
-                  key={el.path}
-                  path={el.path}
-                  element={
-                    <PrivateRoute
-                      isAuthenticated={authState.isAuthenticated}
-                      role={el.role?.includes(profileState.role)}
-                      profileIsActive={profileState.status === "active"}
-                    >
-                      <el.component />
-                    </PrivateRoute>
-                  }
-                />
-              ))}
-            {code === 3 &&
-              !authState.isAuthenticated &&
-              privatePagesWithCode.map((el: PageProps) => (
-                <Route
-                  key={el.path}
-                  path={el.path}
-                  element={<el.component code={code} />}
-                />
-              ))}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Suspense>
-      </Container>
+      <main className={classes.content}>
+        {profileState.favorites ? (
+          <Container className={classes.container}>
+            <Suspense fallback={<Loading />}>
+              <Routes>
+                {publicPages.map((el: PageProps) => (
+                  <Route
+                    key={el.path}
+                    path={el.path}
+                    element={<el.component />}
+                  />
+                ))}
+                {authState.isAuthenticated &&
+                  filterdRoutes.map((el: PageProps) => (
+                    <Route
+                      key={el.path}
+                      path={el.path}
+                      element={
+                        <PrivateRoute
+                          isAuthenticated={authState.isAuthenticated}
+                          role={el.role?.includes(profileState.role)}
+                          profileIsActive={profileState.status === "active"}
+                        >
+                          <el.component />
+                        </PrivateRoute>
+                      }
+                    />
+                  ))}
+                {code === 3 &&
+                  !authState.isAuthenticated &&
+                  privatePagesWithCode.map((el: PageProps) => (
+                    <Route
+                      key={el.path}
+                      path={el.path}
+                      element={<el.component code={code} />}
+                    />
+                  ))}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Suspense>
+          </Container>
+        ) : (
+          <Loading />
+        )}
+      </main>
       <Footer
         isAuthenticated={authState.isAuthenticated}
         handleClick={handleClick}

@@ -43,11 +43,18 @@ export const timeZoneDateTime = (timestamp: number) => {
   return day + "-" + month + "-" + year + " " + hours + ":" + minutes;
 };
 
-export const currencyFormatterDecimal = (val: number) => {
+export const currencyFormatterDecimal = (
+  val: number,
+  currency: string = " Դ",
+  sale: number = 0
+) => {
+  if (sale) {
+    val = Math.floor(val - val * (sale / 100));
+  }
   const roundVal = Math.floor(val * 100) / 100;
   const newVal = roundVal.toFixed(2).replace(".", ".");
   return newVal
     .toString()
     .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-    .concat(" Դ");
+    .concat(currency);
 };

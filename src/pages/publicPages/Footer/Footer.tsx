@@ -1,10 +1,11 @@
 import { Container, Grid, makeStyles, Link } from "@material-ui/core";
 import moment from "moment";
 import logoWhite from "../../../assets/logoWhite.svg";
-import messenger from "../../../assets/messenger.svg";
-import phone from "../../../assets/phone.png";
-import facebook from "../../../assets/facebook.png";
-import instagram from "../../../assets/instagram.png";
+import messenger from "../../../assets/icons/messenger.svg";
+import phone from "../../../assets/icons/phone.svg";
+import facebook from "../../../assets/icons/facebook.png";
+import instagram from "../../../assets/icons/instagram.png";
+import FmdGoodOutlinedIcon from "@mui/icons-material/FmdGoodOutlined";
 
 interface FooterProps {
   isAuthenticated: boolean;
@@ -15,6 +16,7 @@ const useStyles = makeStyles((theme) => ({
   footer: {
     fontSize: 13,
     cursor: "default",
+    zIndex: 2,
     fontWeight: 400,
     background: theme.palette.primary.main,
     color: "#faebd7",
@@ -53,12 +55,11 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    height: 53,
-    width: 53,
+    height: 48,
+    width: 48,
     cursor: "pointer",
     borderRadius: "50%",
     background: "rgba(255,255,255,0.1)",
-    "&:hover": { background: "rgba(255,255,255,0.2)" },
   },
   content: {
     marginLeft: 15,
@@ -67,6 +68,26 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     justifyContent: "center",
     display: "flex",
+    "& .contInf": { fontSize: 15, opacity: 0.7 },
+  },
+  link: {
+    height: "max-content",
+    display: "flex",
+    alignItems: "center",
+    "&:hover .circle": {
+      background: "rgba(255,255,255,0.2)",
+      transition: "0.3s",
+    },
+  },
+  address: {
+    marginTop: 10,
+    lineHeight: "25px",
+    fontSize: 13,
+    marginLeft: 10,
+    display: "flex",
+    opacity: 0.8,
+    alignItems: "center",
+    "&:hover": { opacity: 1, transition: "0.3s" },
   },
   contuctText: { marginTop: "20px", fontSize: 19 },
 }));
@@ -74,7 +95,12 @@ const useStyles = makeStyles((theme) => ({
 const Footer = ({ handleClick, isAuthenticated }: FooterProps) => {
   const classes = useStyles();
   const contucts = [
-    { name: "Հեռախոս", info: "+374 94 80 86 30", link: "", icon: phone },
+    {
+      name: "Հեռախոս",
+      info: "+374 94 80 86 30",
+      link: "tel:+37494808630",
+      icon: phone,
+    },
     {
       name: "Messenger",
       info: "@poqrik_heros",
@@ -116,28 +142,18 @@ const Footer = ({ handleClick, isAuthenticated }: FooterProps) => {
                 <Grid item md={6} xs={12} key={idx}>
                   <div style={{ display: "flex", height: "100%" }}>
                     <Link
+                      className={classes.link}
                       target={el.name !== "Հեռախոս" ? "_blank" : "_parent"}
-                      href={
-                        el.name === "Հեռախոս" ? "tel:+37494808630" : el.link
-                      }
+                      href={el.link}
                       underline="none"
                       color="inherit"
-                      style={{
-                        height: "max-content",
-                        display: "flex",
-                        alignItems: "center",
-                      }}
                     >
-                      <div className={classes.circle}>
-                        <img
-                          src={el.icon}
-                          alt=""
-                          height={el.name !== "Messenger" ? "27px" : "35px"}
-                        />
+                      <div className={`${classes.circle} circle`}>
+                        <img src={el.icon} alt="" height={"23px"} />
                       </div>
                       <div className={classes.content}>
                         <div style={{ fontSize: 14 }}>{el.name}</div>
-                        <div style={{ fontSize: 16 }}>{el.info}</div>
+                        <div className="contInf">{el.info}</div>
                       </div>
                     </Link>
                   </div>
@@ -156,18 +172,47 @@ const Footer = ({ handleClick, isAuthenticated }: FooterProps) => {
             }}
           >
             <div>
-              <div style={{ fontSize: 30, fontWeight: 500 }}>Մեր մասին</div>
-              <div style={{ marginTop: 20, lineHeight: "25px", fontSize: 13 }}>
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry. Lorem Ipsum has been the industry's standard dummy
-                text ever since the 1500s, when an unknown printer took a galley
-                of type and scrambled it to make a type specimen book. It has
-                survived not only five centuries, but also the leap into
-                electronic typesetting, remaining essentially unchanged. It was
-                popularised in the 1960s with the release of Letraset sheets
-                containing Lorem Ipsum passages, and more recently with desktop
-                publishing software like Aldus PageMaker including versions of
-                Lorem Ipsum.
+              <div
+                style={{
+                  fontSize: 20,
+                  whiteSpace: "pre",
+                  fontWeight: 500,
+                  letterSpacing: "2px",
+                }}
+              >
+                Մանկական տոնական և բեմական {"\n"}հագուստների վարձույթ:
+              </div>
+              <div className={classes.contuctText}>Մեր հասցեն</div>
+              <Link
+                target={"_blank"}
+                href={
+                  "https://www.google.com/maps/place/Kaiser/@40.2046744,44.4752022,18z/data=!4m13!1m7!3m6!1s0x406abd191c9b3331:0x111da3215d800c2b!2zMjIgTWFyc2hhbCBCYWdocmFteWFuIEF2ZSwgWWVyZXZhbiwg0JDRgNC80LXQvdC40Y8!3b1!8m2!3d40.1915816!4d44.5098754!3m4!1s0x406abd63bd1f4361:0x50acb91b935c21b8!8m2!3d40.2047222!4d44.4747222"
+                }
+                underline="none"
+                color="inherit"
+              >
+                <div className={classes.address}>
+                  <FmdGoodOutlinedIcon />{" "}
+                  <span style={{ marginLeft: 10 }}>
+                    Երևան, Մարգարյա 23/6, Կաիզեր սուպերմարկետ 2րդ հարկ 90
+                    տաղավար
+                  </span>
+                </div>
+              </Link>
+              <div className={classes.contuctText}>Աշխատանքային օրեր</div>
+              <div
+                style={{
+                  marginTop: 10,
+                  lineHeight: "25px",
+                  fontSize: 13,
+                  opacity: 0.8,
+                  marginLeft: 10,
+                  letterSpacing: "1px",
+                  alignItems: "center",
+                }}
+              >
+                <div>Երկ - Կիր</div>
+                <div>11:00 - 19:30</div>
               </div>
             </div>
           </Grid>

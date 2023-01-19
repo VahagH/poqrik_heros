@@ -26,23 +26,21 @@ export const columns: ColumnProps[] = [
     formTypes: [DIALOG_TYPES.add, DIALOG_TYPES.edit],
     type: CaseInputTypes.TEXT,
   },
-  {
-    name: "Ենթավերնագիր",
-    key: "subtitle",
-    formTypes: [DIALOG_TYPES.add, DIALOG_TYPES.edit],
-    type: CaseInputTypes.TEXTAREA,
-    customElement: (el: string) => (
-      <PopoverComponent title={el} showDotes>
-        {el}
-      </PopoverComponent>
-    ),
-  },
+
   {
     name: "Տարիք",
-    key: "age",
-    placeHolder: "3-5",
+    key: "minAge",
+    mask: "99",
     formTypes: [DIALOG_TYPES.add, DIALOG_TYPES.edit],
-    type: CaseInputTypes.TEXT,
+    type: CaseInputTypes.NUMBER,
+  },
+  {
+    name: "մաքս․ Տարիք",
+    key: "maxAge",
+    mask: "99",
+    formTypes: [DIALOG_TYPES.add, DIALOG_TYPES.edit],
+    type: CaseInputTypes.NUMBER,
+    isRequired: false,
   },
   {
     name: "Գին",
@@ -81,12 +79,23 @@ export const columns: ColumnProps[] = [
     customStyle: (el: string) =>
       el === "active"
         ? { color: "#1DC35D", fontWeight: 600 }
-        : { color: "red", fontWeight: 600 },
+        : { color: "#fc5603", fontWeight: 600 },
   },
   {
     name: "Ստեղծված",
     key: "createdAt",
     customElement: (el: number) => timeZoneDateTime(el),
+  },
+  {
+    name: "Ենթավերնագիր",
+    key: "subtitle",
+    formTypes: [DIALOG_TYPES.add, DIALOG_TYPES.edit],
+    type: CaseInputTypes.TEXTAREA,
+    customElement: (el: string) => (
+      <PopoverComponent title={el} showDotes>
+        {el}
+      </PopoverComponent>
+    ),
   },
   {
     name: "Գլխավոր նկար",

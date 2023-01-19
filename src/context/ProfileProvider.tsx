@@ -10,6 +10,9 @@ import { AuthContext } from "./AuthProvider";
 import { db } from "../firebase/firebase";
 import { doc, getDoc } from "firebase/firestore";
 
+const favorites = localStorage.getItem("favorites");
+const favoritesArr = favorites ? JSON.parse(favorites) : [];
+
 const initialState = {
   firstName: "",
   lastName: "",
@@ -18,6 +21,7 @@ const initialState = {
   phone: "",
   uid: "",
   status: "",
+  favorites: favoritesArr,
 };
 
 interface StateProps {
@@ -28,18 +32,28 @@ interface StateProps {
   phone: string;
   uid: string;
   status: string;
+  favorites: string[];
 }
-type Action = {
-  payload: {
-    firstName: string;
-    lastName: string;
-    role: string;
-    email: string;
-    phone: string;
-    uid: string;
-    status: string;
-  };
-};
+type Action =
+  | {
+      type: "USER";
+      payload: {
+        firstName: string;
+        lastName: string;
+        role: string;
+        email: string;
+        phone: string;
+        uid: string;
+        status: string;
+      };
+    }
+  | {
+      type: "FAVORITES";
+      payload: {
+        isFavorite: boolean;
+        id: string;
+      };
+    };
 
 interface InitContextProps {
   state: StateProps;
@@ -49,8 +63,37 @@ interface InitContextProps {
 export const ProfileContext = createContext({} as InitContextProps);
 
 const reducer = (state: StateProps, action: Action) => {
-  state = action.payload;
-  return state;
+  switch (action.type) {
+    case "USER":
+      return { ...state, ...action.payload };
+    case "FAVORITES":
+      const { id } = action.payload;
+      let favor = state.favorites;
+      if (state.favorites.length) {
+        if (action.payload.isFavorite) {
+          if (!state.favorites.includes(id)) {
+            favor.push(id);
+            localStorage.setItem("favorites", JSON.stringify(favoritesArr));
+          }
+        } else {
+          if (state.favorites.includes(id)) {
+            favor = favor.filter((el: string) => el !== id);
+            localStorage.setItem(
+              "favorites",
+              JSON.stringify(state.favorites.filter((el: string) => el !== id))
+            );
+          }
+        }
+      } else {
+        if (action.payload.isFavorite) {
+          favor.push(id);
+          localStorage.setItem("favorites", JSON.stringify([id]));
+        }
+      }
+      return { ...state, favorites: favor };
+    default:
+      return state;
+  }
 };
 
 const ProfileProvider = ({ children }: { children: React.ReactNode }) => {
@@ -63,6 +106,7 @@ const ProfileProvider = ({ children }: { children: React.ReactNode }) => {
 
       if (docSnap.exists()) {
         dispatch({
+          type: "USER",
           payload: {
             firstName: docSnap.data().firstName,
             lastName: docSnap.data().lastName,
@@ -74,6 +118,7 @@ const ProfileProvider = ({ children }: { children: React.ReactNode }) => {
           },
         });
       } else {
+        localStorage.setItem("profile", "docfalse");
         authDispatch({ type: "log_out", isLogedIn: authState.isAuthenticated });
       }
     },
@@ -84,7 +129,7 @@ const ProfileProvider = ({ children }: { children: React.ReactNode }) => {
     if (authState.isAuthenticated) {
       getData(authState.uid);
     } else {
-      dispatch({ payload: initialState });
+      dispatch({ type: "USER", payload: initialState });
     }
   }, [authState.isAuthenticated, authState.uid, getData]);
   return (

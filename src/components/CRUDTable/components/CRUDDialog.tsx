@@ -67,6 +67,7 @@ const CRUDDialog = ({
   columns,
   formData,
   editedRow,
+  validate,
   setDialog,
   setFormData,
   addData,
@@ -78,6 +79,7 @@ const CRUDDialog = ({
 }: CRUDDialogProps) => {
   const classes = useStyles();
   const [error, setError] = useState<string | null>(null);
+  const [inputError, setInputError] = useState<any>(null);
   const [filteredColumns, setFilteredColumns] = useState<ColumnProps[]>([]);
   const [submit, setSubmit] = useState<boolean>(false);
   const { dispatch: setToast } = useContext(ToastContext);
@@ -88,16 +90,27 @@ const CRUDDialog = ({
     setError(null);
     setDialog(undefined);
     setFormData(null);
+    setInputError(null);
   };
 
   const handleChange = (key: string, value: string | number | any) => {
     if (error) {
       setError(null);
     }
+    if (inputError && inputError[key]) {
+      setInputError((prev: any) => {
+        const newData = { ...prev };
+        delete newData[key];
+        return newData;
+      });
+    }
     setFormData((prev: any) => ({ ...prev, [key]: value }));
   };
 
   const handleSubmit = () => {
+    if (validate && validate(formData, setInputError)) {
+      return;
+    }
     setSubmit(true);
     const newData = { ...formData };
     columns
@@ -280,6 +293,8 @@ const CRUDDialog = ({
                     value={_.get(formData, el.key)}
                     onChange={handleChange}
                     type={el.type}
+                    error={inputError && !!inputError[el?.key]}
+                    helperText={inputError && inputError[el?.key]}
                     jsType={el.jsType}
                     mask={el.mask}
                     options={el.options}

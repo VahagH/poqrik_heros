@@ -27,6 +27,7 @@ const CRUDTable = ({
   columns,
   colapseColumns,
   rows,
+  validate,
   addData,
   getData,
   updateData,
@@ -67,14 +68,15 @@ const CRUDTable = ({
     <>
       <CRUDDialog
         dialog={dialog}
-        setDialog={setDialog}
         columns={columns}
         formData={formData}
+        editedRow={editedRow}
+        setDialog={setDialog}
         setFormData={setFormData}
         addData={addData}
         getData={getData}
         setEditedRow={setEditedRow}
-        editedRow={editedRow}
+        validate={validate}
         updateData={updateData}
         deleteData={deleteData}
         addSuccessCallback={addSuccessCallback}

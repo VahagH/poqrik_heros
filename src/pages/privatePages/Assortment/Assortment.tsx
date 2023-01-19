@@ -20,6 +20,24 @@ const Assortment = () => {
   const [rows, setRows] = useState<any>(null);
   const { state: profileState } = useContext(ProfileContext);
 
+  const validate = (formData: any, setInputError: (data: any) => void) => {
+    let errors: any = {};
+    if (formData?.maxAge && formData?.maxAge <= formData?.minAge) {
+      errors.maxAge = "մաքս․ Տարիքը չի կարող փոքր կամ հավասար լինել Տարիքին:";
+    }
+    if (formData?.minAge <= 0) {
+      errors.minAge = "Տարիքը չի կարող փոքր կամ հավասար լինել 0-ի:";
+    }
+    if (formData?.price < 100) {
+      errors.price = "Գինը չի կարող 100-ից պակաս լինել:";
+    }
+    if (Object.keys(errors).length) {
+      setInputError(errors);
+      return true;
+    }
+    return false;
+  };
+
   const getData = async () => {
     await getDocs(
       query(collection(db, "assortment"), orderBy("code", "desc"))
@@ -63,6 +81,8 @@ const Assortment = () => {
         const storageRef = ref(storage, image);
 
         uploadBytes(storageRef, data.image.file);
+      } else if (data?.image && typeof data?.image === "string") {
+        image = data.image;
       }
       const newData = {
         ...data,
@@ -94,7 +114,7 @@ const Assortment = () => {
 
   return (
     <CRUDTable
-      {...{ columns, rows, addData, getData, updateData, deleteData }}
+      {...{ columns, rows, addData, getData, updateData, deleteData, validate }}
     />
   );
 };
