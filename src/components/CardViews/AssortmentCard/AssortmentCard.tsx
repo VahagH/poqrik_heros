@@ -27,9 +27,11 @@ const useStyles = makeStyles((theme) => ({
   card: {
     overflow: "unset!important",
     cursor: "pointer",
+    width: "100%!important",
+    paddingTop: "2.5%",
     display: "flex",
-    minHeight: 420,
-    maxHeight: 420,
+    minHeight: 350,
+    maxHeight: 350,
     flexDirection: "column",
     justifyContent: "space-between",
     borderRadius: "10px!important",
@@ -41,8 +43,13 @@ const useStyles = makeStyles((theme) => ({
   },
   cardSale: {
     overflow: "unset!important",
-    minHeight: 420,
-    maxHeight: 420,
+    paddingTop: "2.5%",
+    display: "flex",
+    width: "100%!important",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    minHeight: 350,
+    maxHeight: 350,
     cursor: "pointer",
     background: `${hexToRgbA("#ecbbbb", "0.05")}!important`,
     borderRadius: "10px!important",
@@ -76,18 +83,39 @@ const useStyles = makeStyles((theme) => ({
     top: -18,
     right: -18,
   },
-  img: { overflow: "hidden", borderRadius: "10px" },
+  img: {
+    overflow: "hidden",
+    borderRadius: "10px",
+    width: "95%!important",
+    margin: "auto",
+  },
   title: {
     overflow: "hidden",
     textOverflow: "ellipsis",
     whiteSpace: "pre",
     wrap: "nowrap",
   },
+  subtitle: {
+    height: "max-content",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "pre",
+    wrap: "nowrap",
+  },
+  price: {
+    textAlign: "right",
+    height: 35,
+    minHeight: 35,
+    maxHeight: 35,
+    overflow: "hidden",
+    position: "relative",
+    alignItems: "center",
+  },
 }));
 
 const AssortmentCard = ({ item, width }: AssortmentCardProps) => {
   const classes = useStyles();
-  const { id, image, title, subtitle, price, sale } = item;
+  const { id, image, title, subtitle, price, sale, code } = item;
   const { state: profileState, dispatch: profileDispatch } =
     useContext(ProfileContext);
   const [url, setUrl] = useState<any | null>(null);
@@ -118,73 +146,81 @@ const AssortmentCard = ({ item, width }: AssortmentCardProps) => {
         className={classes.img}
       />
 
-      <CardContent
+      <div
         style={{
-          paddingTop: 10,
-          paddingBottom: 0,
+          display: "flex",
+          flexDirection: "column",
+          height: "100%",
+          maxHeight: 150,
+          justifyContent: "space-between",
+          flexGrow: 1,
         }}
       >
-        <Typography variant="h6" component="div" className={classes.title}>
-          {title}
-        </Typography>
-        <Typography
-          variant="body2"
-          color="text.secondary"
+        <CardContent
           style={{
-            height: 42,
-            minHeight: 42,
-            maxHeight: 42,
-            overflow: "hidden",
+            paddingTop: 10,
+            paddingBottom: 0,
           }}
         >
-          {subtitle.length > 70
-            ? `${subtitle.substring(0, 70).trim()}...`
-            : subtitle}
-        </Typography>
-        <div
-          style={{
-            textAlign: "right",
-            height: 35,
-            minHeight: 35,
-            maxHeight: 35,
-            overflow: "hidden",
-            position: "relative",
-          }}
-        >
-          {sale ? (
+          {title && (
+            <Typography variant="h6" component="div" className={classes.title}>
+              {title}
+            </Typography>
+          )}
+
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            className={classes.subtitle}
+          >
+            {subtitle}
+          </Typography>
+          <div className={classes.price}>
+            {sale ? (
+              <div
+                style={{
+                  fontSize: 12,
+                  textDecoration: "line-through",
+                  opacity: 0.8,
+                  color: "red",
+                }}
+              >
+                {currencyFormatterDecimal(price, " դրամ")}
+              </div>
+            ) : null}
             <div
               style={{
-                fontSize: 12,
-                textDecoration: "line-through",
-                opacity: 0.8,
-                color: "red",
+                position: "absolute",
+                bottom: 0,
+                right: 0,
+                display: "flex",
+                width: "100%",
+                justifyContent: "space-between",
               }}
             >
-              {currencyFormatterDecimal(price, " դրամ")}
+              <div style={{ fontSize: 14 }}>Կոդ {code}</div>
+              <div>{currencyFormatterDecimal(price, " դրամ", sale)}</div>
             </div>
-          ) : null}
-          <div style={{ position: "absolute", bottom: 0, right: 0 }}>
-            {currencyFormatterDecimal(price, " դրամ", sale)}
           </div>
-        </div>
-      </CardContent>
-      <CardActions className={classes.actions}>
-        <Button size="small" color="secondary">
-          Տեսնել ավելին
-        </Button>
-        <Button
-          size="small"
-          color="secondary"
-          className={classes.favBtn}
-          onClick={() => handleFavClick(!profileState.favorites.includes(id))}
-        >
-          {profileState.favorites.includes(id) ? (
-            <FavoriteIcon />
-          ) : (
-            <FavoriteBorderIcon />
-          )}
-        </Button>
-      </CardActions>
+        </CardContent>
+        <CardActions className={classes.actions}>
+          <Button size="small" color="secondary">
+            Տեսնել ավելին
+          </Button>
+          <Button
+            size="small"
+            color="secondary"
+            className={classes.favBtn}
+            onClick={() => handleFavClick(!profileState.favorites.includes(id))}
+          >
+            {profileState.favorites.includes(id) ? (
+              <FavoriteIcon />
+            ) : (
+              <FavoriteBorderIcon />
+            )}
+          </Button>
+        </CardActions>
+      </div>
     </Card>
   );
 };

@@ -1,12 +1,13 @@
 import { collection, getDocs, query, where } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Loading from "../../../components/Loading/Loading";
 import { db } from "../../../firebase/firebase";
 import Data from "../../../components/Data";
+import { filters } from "./filters";
 
 const Dresses = () => {
   const [data, setData] = useState<any[] | null>(null);
-  const getData = async () => {
+  const getData = useCallback(async () => {
     await getDocs(
       query(
         collection(db, "assortment"),
@@ -20,15 +21,15 @@ const Dresses = () => {
       }));
       setData(newData);
     });
-  };
+  }, []);
   useEffect(() => {
     getData();
-  }, []);
+  }, [getData]);
 
   if (!data) {
     return <Loading />;
   }
-  return <Data {...{ data, title: "Տոնական" }} />;
+  return <Data {...{ data, title: "Տոնական", filters }} />;
 };
 
 export default Dresses;

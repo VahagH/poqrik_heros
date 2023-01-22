@@ -2,7 +2,8 @@ import React from "react";
 import { TextValidator } from "react-material-ui-form-validator";
 import { CaseInputProps } from "../../support/types";
 import ReactInputMask from "react-input-mask";
-import { Autocomplete } from "@mui/material";
+import Autocomplete from "@mui/material/Autocomplete";
+
 import UploadImages from "../UploadImages";
 
 export const CaseInputTypes = {
@@ -190,6 +191,7 @@ const CaseInput = ({
     case CaseInputTypes.AUTOCOMPLETE:
       return (
         <Autocomplete
+          includeInputInList={false}
           value={value || null}
           onChange={(event: any, option: any) => {
             const newValue = option?.value;
@@ -217,10 +219,6 @@ const CaseInput = ({
               variant="outlined"
               margin="dense"
               placeholder={placeHolder}
-              inputProps={{
-                ...params.inputProps,
-                autoComplete: "nope",
-              }}
               fullWidth={fullWidth}
               validators={isRequired && !value ? ["required"] : []}
               errorMessages={isRequired && !value ? ["Դաշտը պարտադիր է."] : []}

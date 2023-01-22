@@ -37,6 +37,7 @@ export interface CRUDTableRowProps {
 
 export interface ColumnProps {
   name: string;
+  shortName?: string;
   key: string;
   type?: string;
   isRequired?: boolean;
@@ -60,7 +61,7 @@ export interface ColumnProps {
   confirming?: boolean;
   disabled?: (formData: any, dialogType: string, row: any) => boolean;
   customElement?: (el: any, row: any) => any;
-  hideInputFromDialog?: (el: any, formData: any, dialogType: string) => void;
+  hideInputFromDialog?: (formData: any, handleChange: any) => boolean;
 }
 
 export interface CRUDTableProps {
@@ -125,8 +126,17 @@ export const ROLE_OPTION = [
 ];
 
 export const COLORS = [
-  { name: "Ադմին", value: "admin" },
-  { name: "Օգտվող", value: "user" },
+  { name: "Սպիտակ", value: "white" },
+  { name: "Կապույտ", value: "blue" },
+  { name: "Մոխրագույն", value: "gray" },
+  { name: "Վարդագույն", value: "pink" },
+  { name: "Կարմիր", value: "red" },
+  { name: "Դեղին", value: "yellow" },
+  { name: "Մանուշակագույն", value: "purple" },
+  { name: "Կանաչ", value: "green" },
+  { name: "Նեոն", value: "neon" },
+  { name: "Սև", value: "black" },
+  { name: "Մարմնագույն", value: "beige" },
 ];
 
 export interface AutocolpleteType {

@@ -194,7 +194,7 @@ const Footer = ({ handleClick, isAuthenticated }: FooterProps) => {
                 <div className={classes.address}>
                   <FmdGoodOutlinedIcon />{" "}
                   <span style={{ marginLeft: 10 }}>
-                    Երևան, Մարգարյա 23/6, Կաիզեր սուպերմարկետ 2րդ հարկ 90
+                    Երևան, Մարգարյան 23/6, Կաիզեր սուպերմարկետ 2րդ հարկ 90
                     տաղավար
                   </span>
                 </div>

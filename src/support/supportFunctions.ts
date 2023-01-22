@@ -52,9 +52,8 @@ export const currencyFormatterDecimal = (
     val = Math.floor(val - val * (sale / 100));
   }
   const roundVal = Math.floor(val * 100) / 100;
-  const newVal = roundVal.toFixed(2).replace(".", ".");
-  return newVal
+  return roundVal
     .toString()
-    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+    .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
     .concat(currency);
 };

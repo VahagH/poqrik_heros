@@ -238,10 +238,13 @@ const CRUDDialog = ({
         (el: ColumnProps) =>
           el.formTypes &&
           dialog?.dialogType &&
-          el.formTypes.includes(dialog?.dialogType)
+          el.formTypes.includes(dialog?.dialogType) &&
+          (el.hideInputFromDialog
+            ? !el.hideInputFromDialog(formData, setFormData)
+            : true)
       )
     );
-  }, [dialog?.dialogType, columns]);
+  }, [dialog?.dialogType, columns, formData, setFormData]);
 
   useEffect(() => {
     if (location.pathname === "/users") {

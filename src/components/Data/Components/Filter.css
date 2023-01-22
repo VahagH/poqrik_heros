@@ -1,0 +1,149 @@
+.hotelSearchFilterBox {
+  width: 100%;
+  height: max-content;
+  padding: 20px 0 10px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+
+.filterBox {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.filterBoxName {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.filterBoxBtn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  position: relative;
+}
+
+.filterBoxBtn:hover {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.08);
+  position: relative;
+}
+
+.filterBoxBtnHorizontal {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  width: 16px;
+  height: 2px;
+  display: block;
+  border-bottom: 2px solid #000;
+}
+.filterBoxBtnVertical {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  width: 7px;
+  height: 7px;
+  display: block;
+  border-bottom: 2px solid #000;
+  border-right: 2px solid #000;
+  transform: rotate(45deg);
+  transition: all 0.3s;
+}
+
+.filterBoxBtnVertical.active {
+  transform: rotate(-135deg);
+}
+
+.filterBoxMenuItems {
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.2s;
+}
+
+.filterBoxMenuItems input {
+  display: none;
+}
+
+.filterBoxInput {
+  font-size: 15px;
+  width: 100%;
+  height: max-content;
+  padding: 0px 5px 0 0;
+  line-height: 20px;
+  font-style: normal;
+  font-weight: normal;
+  margin: 12px 0;
+  display: flex;
+  cursor: pointer;
+  text-align: top;
+}
+
+.fake {
+  display: flex !important;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid black;
+  margin-right: 10px;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+.fake::after {
+  display: block;
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #000;
+  opacity: 0;
+}
+
+.fakeCheck {
+  position: relative;
+  min-width: 15px;
+  height: 15px;
+  border-radius: 3px;
+  border: 2px solid black;
+  margin-right: 10px;
+}
+
+.fakeCheck::after {
+  display: block;
+  content: "";
+  width: 8px;
+  height: 4px;
+  border: 2px solid black;
+  border-top: none;
+  border-right: none;
+  opacity: 0;
+  transform: rotate(-45deg);
+  position: absolute;
+  top: 2px;
+  right: 0;
+  left: 0;
+  margin: auto;
+}
+
+.filterBoxMenuItems input:checked + .fake::after {
+  opacity: 1;
+}
+
+.filterBoxMenuItems input:checked + .fakeCheck::after {
+  opacity: 1;
+}

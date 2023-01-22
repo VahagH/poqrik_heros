@@ -8,6 +8,7 @@ import {
   STATUS_OPTION,
   ASSORTMENT_OPTION,
   ColumnProps,
+  COLORS,
 } from "../../../support/types";
 import PopoverComponent from "../../../components/PopoverComponent";
 
@@ -21,23 +22,46 @@ export const columns: ColumnProps[] = [
     onlyRead: true,
   },
   {
+    name: "Նշումներ",
+    key: "notes",
+    hideColumnFromTable: true,
+    formTypes: [DIALOG_TYPES.add, DIALOG_TYPES.edit],
+    type: CaseInputTypes.TEXT,
+    isRequired: false,
+  },
+  {
     name: "Վերնագիր",
     key: "title",
     formTypes: [DIALOG_TYPES.add, DIALOG_TYPES.edit],
     type: CaseInputTypes.TEXT,
+    isRequired: false,
   },
-
+  {
+    name: "Ենթավերնագիր",
+    key: "subtitle",
+    formTypes: [DIALOG_TYPES.add, DIALOG_TYPES.edit],
+    type: CaseInputTypes.TEXTAREA,
+    isRequired: false,
+    customElement: (el: string) => (
+      <PopoverComponent title={el} showDotes>
+        {el}
+      </PopoverComponent>
+    ),
+  },
   {
     name: "Տարիք",
     key: "minAge",
     mask: "99",
+    jsType: "number",
     formTypes: [DIALOG_TYPES.add, DIALOG_TYPES.edit],
     type: CaseInputTypes.NUMBER,
   },
   {
     name: "մաքս․ Տարիք",
+    shortName: "մաքս․",
     key: "maxAge",
     mask: "99",
+    jsType: "number",
     formTypes: [DIALOG_TYPES.add, DIALOG_TYPES.edit],
     type: CaseInputTypes.NUMBER,
     isRequired: false,
@@ -70,6 +94,22 @@ export const columns: ColumnProps[] = [
     customElement: (el: string) => (el === "dress" ? "Տոնական" : "Կերպար"),
   },
   {
+    name: "Գույն",
+    key: "color",
+    formTypes: [DIALOG_TYPES.add, DIALOG_TYPES.edit],
+    type: CaseInputTypes.AUTOCOMPLETE,
+    options: COLORS,
+    hideColumnFromTable: true,
+    hideInputFromDialog(formData, setFormData) {
+      if (formData?.type && formData.type === "shape") {
+        setFormData((prev: any) => ({ ...prev, color: null }));
+        return true;
+      }
+      return false;
+    },
+    customElement: (el: string) => (el === "dress" ? "Տոնական" : "Կերպար"),
+  },
+  {
     name: "Կարգավիճակ",
     key: "status",
     formTypes: [DIALOG_TYPES.add, DIALOG_TYPES.edit],
@@ -87,15 +127,12 @@ export const columns: ColumnProps[] = [
     customElement: (el: number) => timeZoneDateTime(el),
   },
   {
-    name: "Ենթավերնագիր",
-    key: "subtitle",
+    name: "Բառ կոդ",
+    key: "barCode",
+    hideColumnFromTable: true,
     formTypes: [DIALOG_TYPES.add, DIALOG_TYPES.edit],
     type: CaseInputTypes.TEXTAREA,
-    customElement: (el: string) => (
-      <PopoverComponent title={el} showDotes>
-        {el}
-      </PopoverComponent>
-    ),
+    isRequired: false,
   },
   {
     name: "Գլխավոր նկար",

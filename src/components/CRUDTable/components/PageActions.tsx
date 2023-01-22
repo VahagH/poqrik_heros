@@ -15,6 +15,9 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 20,
     display: "flex",
     justifyContent: "space-between",
+    [theme.breakpoints.down("xs")]: {
+      flexDirection: "column",
+    },
   },
   btn: {
     background: theme.palette.primary.main,
@@ -29,6 +32,14 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       background: hexToRgbA(theme.palette.primary.main, "0.8"),
     },
+    [theme.breakpoints.down("xs")]: {
+      margin: "10px 0",
+      width: "47%",
+    },
+  },
+  actions: {
+    display: "flex",
+    justifyContent: "space-between",
   },
 }));
 
@@ -44,7 +55,7 @@ const PageActions = ({
     setDialog({
       open: true,
       dialogType: DIALOG_TYPES.add,
-      dialogTitle: "Ավելացնել օգտվող",
+      dialogTitle: "Ավելացնել",
     });
   };
   const handleSearch = (search: string) => {
@@ -73,14 +84,14 @@ const PageActions = ({
       <div style={{ border: "1px solid #eee", borderRadius: 12 }}>
         <InputBase
           sx={{ width: 250, p: 1, paddingLeft: "15px" }}
-          placeholder="Search"
+          placeholder="Փնտրել"
           inputProps={{ "aria-label": "search google maps" }}
           onChange={(event) => {
             handleSearch(event.target.value);
           }}
         />
       </div>
-      <div>
+      <div className={classes.actions}>
         {addData && (
           <Button className={classes.btn} onClick={handleDialogClick}>
             Ավելացնել

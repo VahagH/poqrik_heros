@@ -104,7 +104,7 @@ const CRUDTable = ({
                       minWidth: "70px",
                     }}
                   >
-                    {el.name}
+                    {el.shortName ? el.shortName : el.name}
                   </TableCell>
                 ))}
                 {(updateData || deleteData) && (

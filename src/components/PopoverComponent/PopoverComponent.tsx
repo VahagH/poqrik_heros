@@ -72,7 +72,7 @@ const PopoverComponent = ({
           <span>
             {title?.length > strLength
               ? title.substring(0, strLength).trim()
-              : title}
+              : title || "- - -"}
           </span>
           {title?.length > strLength && (
             <span className={classes.showMoreIcon} onClick={handleClick}>

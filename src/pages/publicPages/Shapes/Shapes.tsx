@@ -1,12 +1,13 @@
 import { collection, getDocs, query, where } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Data from "../../../components/Data";
 import Loading from "../../../components/Loading/Loading";
 import { db } from "../../../firebase/firebase";
+import { filters } from "./filters";
 
 const Shapes = () => {
   const [data, setData] = useState<any[] | null>(null);
-  const getData = async () => {
+  const getData = useCallback(async () => {
     await getDocs(
       query(
         collection(db, "assortment"),
@@ -22,14 +23,14 @@ const Shapes = () => {
       ];
       setData(newData);
     });
-  };
+  }, []);
   useEffect(() => {
     getData();
-  }, []);
+  }, [getData]);
   if (!data) {
     return <Loading />;
   }
-  return <Data {...{ data, title: "Կերպարներ" }} />;
+  return <Data {...{ data, title: "Կերպարներ", filters }} />;
 };
 
 export default Shapes;
