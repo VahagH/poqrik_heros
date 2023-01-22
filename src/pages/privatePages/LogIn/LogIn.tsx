@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   },
   container: {
     width: 500,
-    height: 350,
+    height: "auto",
     color: theme.palette.primary.main,
     overflow: "hidden",
     overflowY: "auto",
@@ -71,6 +71,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
+    marginTop: 15,
     fontSize: 15,
     cursor: "pointer",
   },
@@ -107,6 +108,7 @@ const LogIn = () => {
 
   const handleChange = (key: string, value: any) => {
     setFormData((prev) => ({ ...prev, [key]: value }));
+    setClickInfo(null);
   };
   const handleSubmit = () => {
     setClickInfo({ submit: true, error: "" });

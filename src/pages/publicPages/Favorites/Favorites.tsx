@@ -45,7 +45,9 @@ const Favorites = () => {
         }}
       >
         <img alt="" src={notFound} width="100px" />
-        <div> Դուք դեռ չեք ավելացրել ընտրված ապրանք</div>
+        <div style={{ textAlign: "center" }}>
+          Դուք դեռ չեք ավելացրել ընտրված ապրանք
+        </div>
       </div>
     );
 

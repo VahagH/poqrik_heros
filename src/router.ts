@@ -5,7 +5,6 @@ export const publicPages: PageProps[] = [
   {
     name: "Գլխավոր",
     path: "/",
-    disable: true,
     navBar: true,
     component: React.lazy(() => import("./pages/publicPages/Home")),
   },

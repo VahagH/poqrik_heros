@@ -1,4 +1,11 @@
-import { Container, Grid, makeStyles, Link } from "@material-ui/core";
+import {
+  Container,
+  Grid,
+  makeStyles,
+  Link,
+  useMediaQuery,
+  useTheme,
+} from "@material-ui/core";
 import moment from "moment";
 import logoWhite from "../../../assets/logoWhite.svg";
 import messenger from "../../../assets/icons/messenger.svg";
@@ -6,7 +13,6 @@ import phone from "../../../assets/icons/phone.svg";
 import facebook from "../../../assets/icons/facebook.png";
 import instagram from "../../../assets/icons/instagram.png";
 import FmdGoodOutlinedIcon from "@mui/icons-material/FmdGoodOutlined";
-
 interface FooterProps {
   isAuthenticated: boolean;
   handleClick: () => void;
@@ -39,6 +45,9 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     minHeight: 35,
     borderTop: "1px solid rgba(255,255,255,0.1)",
+    [theme.breakpoints.down(400)]: {
+      fontSize: 11,
+    },
   },
   appName: {
     marginLeft: 10,
@@ -88,12 +97,40 @@ const useStyles = makeStyles((theme) => ({
     opacity: 0.8,
     alignItems: "center",
     "&:hover": { opacity: 1, transition: "0.3s" },
+    [theme.breakpoints.down(450)]: {
+      fontSize: 11,
+    },
   },
-  contuctText: { marginTop: "20px", fontSize: 19 },
+  contuctText: {
+    marginTop: "20px",
+    fontSize: 19,
+    [theme.breakpoints.down(400)]: {
+      fontSize: 18,
+    },
+  },
+  section2Title: {
+    fontSize: 20,
+    whiteSpace: "pre",
+    fontWeight: 500,
+    letterSpacing: "2px",
+    [theme.breakpoints.down(960)]: {
+      paddingTop: 15,
+      borderTop: "1px solid rgba(255,255,255,0.1)",
+    },
+    [theme.breakpoints.down("xs")]: {
+      whiteSpace: "unset",
+    },
+    [theme.breakpoints.down(400)]: {
+      fontSize: 18,
+    },
+  },
 }));
 
 const Footer = ({ handleClick, isAuthenticated }: FooterProps) => {
   const classes = useStyles();
+  const theme = useTheme();
+  const isMobile960 = useMediaQuery(theme.breakpoints.down(960));
+  const isMobileXS = useMediaQuery(theme.breakpoints.down("xs"));
   const contucts = [
     {
       name: "Հեռախոս",
@@ -136,10 +173,10 @@ const Footer = ({ handleClick, isAuthenticated }: FooterProps) => {
             <Grid
               container
               className={classes.container}
-              style={{ width: "100%", height: 160 }}
+              style={{ width: "100%", height: isMobileXS ? 250 : 160 }}
             >
               {contucts.map((el: any, idx: number) => (
-                <Grid item md={6} xs={12} key={idx}>
+                <Grid item md={6} sm={6} xs={12} key={idx}>
                   <div style={{ display: "flex", height: "100%" }}>
                     <Link
                       className={classes.link}
@@ -167,19 +204,14 @@ const Footer = ({ handleClick, isAuthenticated }: FooterProps) => {
             xs={12}
             className={classes.section}
             style={{
-              borderLeft: "1px solid rgba(255,255,255,0.1)",
-              paddingLeft: 20,
+              borderLeft: isMobile960
+                ? "unset"
+                : "1px solid rgba(255,255,255,0.1)",
+              paddingLeft: isMobile960 ? "unset" : 20,
             }}
           >
             <div>
-              <div
-                style={{
-                  fontSize: 20,
-                  whiteSpace: "pre",
-                  fontWeight: 500,
-                  letterSpacing: "2px",
-                }}
-              >
+              <div className={classes.section2Title}>
                 Մանկական տոնական և բեմական {"\n"}հագուստների վարձույթ:
               </div>
               <div className={classes.contuctText}>Մեր հասցեն</div>

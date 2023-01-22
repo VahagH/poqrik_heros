@@ -1,5 +1,11 @@
-import { makeStyles, Container } from "@material-ui/core";
-import { Badge, List } from "@mui/material";
+import {
+  makeStyles,
+  Container,
+  useMediaQuery,
+  useTheme,
+} from "@material-ui/core";
+import { Badge, List, Box, SwipeableDrawer } from "@mui/material";
+import IconButton from "@mui/material/IconButton";
 import { privatePages, publicPages } from "../../../router";
 import ListItemLink from "../../../components/ListItemLink";
 import logo from "../../../assets/logo.svg";
@@ -10,10 +16,11 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import Logout from "@mui/icons-material/Logout";
 import FadeMenu from "../../../components/FadeMenu";
 import PermIdentityIcon from "@mui/icons-material/PermIdentity";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../../../context/AuthProvider";
 import { ProfileContext } from "../../../context/ProfileProvider";
 import CheckroomIcon from "@mui/icons-material/Checkroom";
+import MenuIcon from "@mui/icons-material/Menu";
 // import SettingsIcon from "@mui/icons-material/Settings";
 
 const useStyles = makeStyles((theme) => ({
@@ -26,6 +33,11 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: "0 0 30px 0 rgb(0 0 0 / 7%)",
     display: "flex",
     alignItems: "center",
+    [theme.breakpoints.down(800)]: {
+      height: 70,
+      maxHeight: 70,
+      minHeight: 70,
+    },
   },
   container: {
     maxHeight: 100,
@@ -37,9 +49,16 @@ const useStyles = makeStyles((theme) => ({
     height: 80,
     maxHeight: 80,
     cursor: "pointer",
+    [theme.breakpoints.down(800)]: {
+      height: 55,
+      maxHeight: 55,
+    },
   },
   list: {
     display: "flex",
+    [theme.breakpoints.down(800)]: {
+      display: "none",
+    },
   },
   nav: {
     marginLeft: 5,
@@ -60,13 +79,39 @@ const useStyles = makeStyles((theme) => ({
       color: "#777",
     },
   },
+  drawerIc: {
+    "&.MuiIconButton-root": {
+      display: "none",
+      [theme.breakpoints.down(800)]: {
+        display: "block",
+      },
+    },
+  },
 }));
 
 const NavBar = () => {
   const classes = useStyles();
+  const [open, setOpen] = useState<boolean>(false);
   const navigate = useNavigate();
+  const theme = useTheme();
   const { state: authState, dispatch: authDispatch } = useContext(AuthContext);
   const { state: profileState } = useContext(ProfileContext);
+  const isMobile1070 = useMediaQuery(theme.breakpoints.down(1070));
+  const isAdmin = profileState?.role === "admin";
+
+  const toggleDrawer =
+    (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
+      if (
+        event &&
+        event.type === "keydown" &&
+        ((event as React.KeyboardEvent).key === "Tab" ||
+          (event as React.KeyboardEvent).key === "Shift")
+      ) {
+        return;
+      }
+
+      setOpen(open);
+    };
 
   const menuItems = [
     {
@@ -120,26 +165,63 @@ const NavBar = () => {
     path: "/favorites",
     navBar: false,
   };
+
   return (
     <div className={classes.wrapper}>
       <Container className={classes.container}>
+        <IconButton
+          color="inherit"
+          className={classes.drawerIc}
+          aria-label="open drawer"
+          onClick={() => setOpen(true)}
+          edge="start"
+          style={{ display: isAdmin && isMobile1070 ? "block" : "" }}
+        >
+          <MenuIcon />
+        </IconButton>
         <img
           src={logo}
           onClick={() => navigate("/")}
           alt=""
           className={classes.logo}
         />
-        <List className={classes.list}>
-          {filteredRoutes.map((el) => (
-            <ListItemLink link={el} key={el.path} />
-          ))}
-        </List>
+        {(isAdmin && isMobile1070) || open ? (
+          <Box
+            sx={{ width: "auto", display: open ? "block" : "none" }}
+            role="presentation"
+            onClick={toggleDrawer(false)}
+            onKeyDown={toggleDrawer(false)}
+          >
+            <SwipeableDrawer
+              anchor={"top"}
+              open={open}
+              onClose={toggleDrawer(false)}
+              onOpen={toggleDrawer(true)}
+            >
+              <List
+                style={{
+                  margin: "auto",
+                }}
+              >
+                {filteredRoutes.map((el) => (
+                  <ListItemLink link={el} key={el.path} />
+                ))}
+              </List>
+            </SwipeableDrawer>
+          </Box>
+        ) : (
+          <List className={classes.list}>
+            {filteredRoutes.map((el) => (
+              <ListItemLink link={el} key={el.path} />
+            ))}
+          </List>
+        )}
+
         <div
           style={{
             display: "flex",
             justifyContent: "end",
             minHeight: 50,
-            minWidth: 110,
           }}
         >
           <ListItemLink
@@ -147,10 +229,10 @@ const NavBar = () => {
             icon={
               profileState.favorites.length ? (
                 <Badge badgeContent={profileState.favorites.length} max={99}>
-                  <FavoriteIcon style={{ opacity: 0.6 }} />
+                  <FavoriteIcon />
                 </Badge>
               ) : (
-                <FavoriteBorderIcon style={{ opacity: 0.5 }} />
+                <FavoriteBorderIcon />
               )
             }
           />

@@ -37,6 +37,7 @@ const useStyles = makeStyles((theme) => ({
     top: 0,
     left: 0,
     width: "60%",
+    minWidth: 250,
     overflowY: "scroll",
     height: "100vh",
     padding: "20px 20px 0 20px",
@@ -86,6 +87,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "10px 25px",
     textTransform: "unset",
     marginRight: 10,
+    borderRadius: 10,
     fontSize: 15,
     fontWeight: 600,
     "&:hover": { background: theme.palette.primary.main },
@@ -285,6 +287,18 @@ const Data = ({ data, title, filters }: DataProps) => {
               </Grid>
             ))}
         </Grid>
+        {!!!filteredData.length && (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              margin: "30px 0",
+              fontSize: 18,
+            }}
+          >
+            Տվյալներ չկան
+          </div>
+        )}
         {filteredData.length > 12 && (
           <Pagination
             count={Math.ceil(filteredData.length / 12)}

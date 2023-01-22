@@ -119,7 +119,7 @@ export const columns: ColumnProps[] = [
     customStyle: (el: string) =>
       el === "active"
         ? { color: "#1DC35D", fontWeight: 600 }
-        : { color: "#fc5603", fontWeight: 600 },
+        : { color: "rgb(233, 100, 100)", fontWeight: 600 },
   },
   {
     name: "Ստեղծված",

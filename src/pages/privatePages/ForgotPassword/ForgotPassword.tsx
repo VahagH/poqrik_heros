@@ -9,6 +9,9 @@ import { useState } from "react";
 import { CircularProgress } from "@mui/material";
 import { hexToRgbA } from "../../../support/supportFunctions";
 import { Link } from "react-router-dom";
+import { sendPasswordResetEmail } from "firebase/auth";
+import { auth } from "../../../firebase/firebase";
+import Alert from "@mui/material/Alert";
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {
@@ -50,11 +53,6 @@ const useStyles = makeStyles((theme) => ({
       background: hexToRgbA(theme.palette.primary.main, "0.8"),
     },
   },
-  error: {
-    margin: 5,
-    color: "red",
-    height: 20,
-  },
   inputCont: {
     display: "flex",
     height: "100%",
@@ -72,11 +70,16 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 15,
     cursor: "pointer",
   },
+  error: {
+    margin: "10px 0",
+    color: "red",
+    height: "max-content",
+    width: "95%",
+  },
 }));
 
-interface LogInProp {
+interface ForgotProp {
   email: string;
-  password: string;
 }
 
 const ForgotPassword = () => {
@@ -84,24 +87,51 @@ const ForgotPassword = () => {
   const [clickInfo, setClickInfo] = useState<{
     submit?: boolean;
     error?: string;
+    success?: string;
   } | null>(null);
-  const [formData, setFormData] = useState<LogInProp>({
+  const [formData, setFormData] = useState<ForgotProp>({
     email: "",
-    password: "",
   });
 
   const handleChange = (key: string, value: any) => {
     setFormData((prev) => ({ ...prev, [key]: value }));
+    setClickInfo(null);
   };
   const handleSubmit = () => {
-    // setClickInfo({ submit: true, error: "cascsa" });
+    setClickInfo({ submit: true });
+    sendPasswordResetEmail(auth, formData.email)
+      .then(() => {
+        setClickInfo({
+          submit: false,
+          success:
+            "Ձեր էլ․ հասցեին ուղարկվել է նամակ խնդրում ենք հետևել հրահանգներին",
+        });
+      })
+      .catch((error) => {
+        setClickInfo({
+          submit: false,
+          error:
+            error.code === "auth/user-not-found"
+              ? "Էլ․ հասցեն գոյություն չունի համակարգում"
+              : error.message,
+        });
+      });
   };
   return (
     <div className={classes.wrapper}>
       <div className={classes.container}>
         <img src={logo} alt="" height="100px" />
-        <div className={classes.error}>{clickInfo?.error}</div>
-        <div style={{ color: "black", fontSize: 15, width: "100%" }}>
+        {(clickInfo?.error || clickInfo?.success) && (
+          <Alert
+            severity={clickInfo.error ? "error" : "success"}
+            className={classes.error}
+          >
+            {clickInfo.error ? clickInfo.error : clickInfo.success}
+          </Alert>
+        )}
+        <div
+          style={{ color: "black", fontSize: 15, width: "100%", marginTop: 10 }}
+        >
           Մուտքագրեք էլ․ հասցեն գաղտնաբառը վերականգնելու համար
         </div>
         <ValidatorForm onSubmit={handleSubmit} className={classes.valdate}>
@@ -120,7 +150,7 @@ const ForgotPassword = () => {
               ))}
             </div>
             <div className={classes.buttons}>
-              <Button component={Link} to={"/"}>
+              <Button component={Link} to={"/admin"}>
                 Վերադառնալ
               </Button>
               <Button type="submit" className={classes.btnSubmit}>

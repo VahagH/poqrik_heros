@@ -1,9 +1,14 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import { privatePages, privatePagesWithCode, publicPages } from "./router";
 import NotFound from "./components/NotFound";
 import Loading from "./components/Loading/Loading";
 import { Suspense, useContext, useEffect, useState } from "react";
-import { Container, makeStyles } from "@material-ui/core";
+import {
+  Container,
+  makeStyles,
+  useMediaQuery,
+  useTheme,
+} from "@material-ui/core";
 import NavBar from "./pages/publicPages/NavBar";
 import { PageProps } from "./support/types";
 import Toast from "./components/Toast";
@@ -12,6 +17,8 @@ import PrivateRoute from "./components/routes/PrivateRoute";
 import { ProfileContext } from "./context/ProfileProvider";
 import { auth } from "./firebase/firebase";
 import Footer from "./pages/publicPages/Footer";
+import main from "./assets/main.jpg";
+import mainMobile from "./assets/mainMobile.jpg";
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {
@@ -48,8 +55,11 @@ const useStyles = makeStyles((theme) => ({
 function App() {
   const classes = useStyles();
   const [code, setCode] = useState(0);
+  const theme = useTheme();
+  const isMobileSM = useMediaQuery(theme.breakpoints.down("sm"));
   const { state: authState, dispatch: authDispatch } = useContext(AuthContext);
   const { state: profileState } = useContext(ProfileContext);
+  const location = useLocation();
 
   const filterdRoutes = privatePages.filter(
     (route: PageProps) =>
@@ -76,6 +86,12 @@ function App() {
   return (
     <div className={classes.wrapper}>
       <NavBar />
+      {location.pathname === "/" &&
+        (isMobileSM ? (
+          <img src={mainMobile} alt="" width="100%" />
+        ) : (
+          <img src={main} alt="" width="100%" />
+        ))}
       <main className={classes.content}>
         {profileState.favorites ? (
           <Container className={classes.container}>

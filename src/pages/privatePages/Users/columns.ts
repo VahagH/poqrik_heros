@@ -58,7 +58,7 @@ export const columns: ColumnProps[] = [
     formTypes: [DIALOG_TYPES.add, DIALOG_TYPES.edit],
     type: CaseInputTypes.AUTOCOMPLETE,
     options: ROLE_OPTION,
-    hideColumnFromTable: true,
+    customElement: (el: string) => (el === "admin" ? "Ադմին" : "Օգտվող"),
   },
   {
     name: "Կարգավիճակ",
@@ -70,6 +70,6 @@ export const columns: ColumnProps[] = [
     customStyle: (el: string) =>
       el === "active"
         ? { color: "#1DC35D", fontWeight: 600 }
-        : { color: "#fc5603", fontWeight: 600 },
+        : { color: "rgb(233, 100, 100)", fontWeight: 600 },
   },
 ];

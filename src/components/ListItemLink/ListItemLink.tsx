@@ -9,6 +9,7 @@ const useStyles = makeStyles((theme) => ({
     width: "max-content",
     marginLeft: 5,
     borderRadius: 20,
+    color: "#666",
     "&.active .MuiTypography-root, &.active": {
       color: theme.palette.secondary.main,
     },
@@ -21,7 +22,6 @@ const useStyles = makeStyles((theme) => ({
     "& .MuiTypography-root": {
       fontWeight: 600,
       fontSize: 16,
-      color: "#777",
     },
   },
 }));
