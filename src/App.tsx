@@ -43,6 +43,7 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: 5,
     flexGrow: 1,
     display: "flex",
+    maxWidth: 1500,
     justifyContent: "space-between",
     flexDirection: "column",
     position: "relative",

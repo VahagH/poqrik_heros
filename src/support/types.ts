@@ -1,5 +1,7 @@
 export interface CaseInputProps {
   onChange: (key: string, value: string | number | any) => void;
+  onChangeFunc?: (formData: any, zis: any) => any;
+  formData?: any;
   name: string;
   label: string;
   value: string | number | [] | any;
@@ -59,9 +61,14 @@ export interface ColumnProps {
   mdGrid?: any;
   options?: AutocolpleteType[];
   confirming?: boolean;
+  onChangeFunc?: (formData: any, zis: any) => any;
   disabled?: (formData: any, dialogType: string, row: any) => boolean;
   customElement?: (el: any, row: any) => any;
-  hideInputFromDialog?: (formData: any, handleChange: any) => boolean;
+  hideInputFromDialog?: (
+    formData: any,
+    handleChange: any,
+    role: string
+  ) => boolean;
 }
 
 export interface CRUDTableProps {
@@ -115,6 +122,14 @@ export const STATUS_OPTION = [
   { name: "Ակտիվ", value: "active" },
   { name: "Ոչ ակտիվ", value: "inactive" },
 ];
+
+export const RESERV_STATUS_OPTION = [
+  { name: "Ամրագրված", value: "reserved" },
+  { name: "Վերցված", value: "taken" },
+  { name: "Ստացված", value: "received" },
+  { name: "Չեղարկված", value: "cancelled" },
+];
+
 export const ASSORTMENT_OPTION = [
   { name: "Տոնական", value: "dress" },
   { name: "Կերպար", value: "shape" },

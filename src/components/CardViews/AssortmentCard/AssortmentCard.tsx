@@ -17,6 +17,7 @@ import { ref, getDownloadURL } from "firebase/storage";
 import { storage } from "../../../firebase/firebase";
 import saleIMG from "../../../assets/icons/sale.svg";
 import noImage from "../../../assets/icons/noImage.jpg";
+import { useNavigate } from "react-router-dom";
 
 interface AssortmentCardProps {
   item: any;
@@ -26,7 +27,7 @@ interface AssortmentCardProps {
 const useStyles = makeStyles((theme) => ({
   card: {
     overflow: "unset!important",
-    cursor: "pointer",
+    cursor: "default",
     width: "100%!important",
     paddingTop: "2.5%",
     display: "flex",
@@ -50,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     minHeight: 350,
     maxHeight: 350,
-    cursor: "pointer",
+    cursor: "default",
     background: `${hexToRgbA("#ecbbbb", "0.05")}!important`,
     borderRadius: "10px!important",
     position: "relative",
@@ -119,6 +120,7 @@ const AssortmentCard = ({ item, width }: AssortmentCardProps) => {
   const { state: profileState, dispatch: profileDispatch } =
     useContext(ProfileContext);
   const [url, setUrl] = useState<any | null>(null);
+  const navigate = useNavigate();
 
   const handleFavClick = (fav: boolean) => {
     profileDispatch({ type: "FAVORITES", payload: { isFavorite: fav, id } });
@@ -204,7 +206,11 @@ const AssortmentCard = ({ item, width }: AssortmentCardProps) => {
           </div>
         </CardContent>
         <CardActions className={classes.actions}>
-          <Button size="small" color="secondary">
+          <Button
+            onClick={() => navigate(`/info/${id}`, { state: item })}
+            size="small"
+            color="secondary"
+          >
             Տեսնել ավելին
           </Button>
           <Button

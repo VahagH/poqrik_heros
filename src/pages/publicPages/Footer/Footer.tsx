@@ -30,6 +30,7 @@ const useStyles = makeStyles((theme) => ({
   container: {
     display: "flex",
     justifyContent: "space-between",
+    maxWidth: 1500,
     paddingTop: 20,
   },
   section: {
@@ -207,7 +208,7 @@ const Footer = ({ handleClick, isAuthenticated }: FooterProps) => {
               borderLeft: isMobile960
                 ? "unset"
                 : "1px solid rgba(255,255,255,0.1)",
-              paddingLeft: isMobile960 ? "unset" : 20,
+              paddingLeft: isMobile960 ? "unset" : 50,
             }}
           >
             <div>

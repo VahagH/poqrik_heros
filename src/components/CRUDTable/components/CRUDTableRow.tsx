@@ -10,7 +10,11 @@ import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import { hexToRgbA } from "../../../support/supportFunctions";
+import {
+  currencyFormatterDecimal,
+  hexToRgbA,
+  timeZoneDateTime,
+} from "../../../support/supportFunctions";
 import { makeStyles, useTheme } from "@material-ui/core";
 import {
   ColumnProps,
@@ -20,6 +24,8 @@ import {
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import _ from "lodash";
 import FadeMenu from "../../FadeMenu";
+import moment from "moment";
+import PopoverComponent from "../../PopoverComponent";
 
 const useStyles = makeStyles((theme) => ({
   row: {
@@ -108,6 +114,14 @@ const CRUDTableRow = ({
                 : idx % 2
                 ? "unset"
                 : hexToRgbA("#eee", "0.5"),
+            background:
+              +moment().format("X") > +row.takeDay / 1000 &&
+              row.status === "reserved"
+                ? hexToRgbA("#f2bb05", "0.8")
+                : +moment().format("X") > +row.bringDay / 1000 &&
+                  row.status === "taken"
+                ? "rgba(233, 100, 100, 0.9)"
+                : "",
           },
         }}
       >
@@ -162,33 +176,121 @@ const CRUDTableRow = ({
         )}
       </TableRow>
       {colapseColumns && (
-        <TableRow>
-          <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+        <TableRow style={{ background: "#eee", width: "100%" }}>
+          <TableCell
+            style={{ paddingBottom: 0, paddingTop: 0 }}
+            colSpan={columns.length}
+          >
             <Collapse in={open} timeout="auto" unmountOnExit>
               <Box sx={{ margin: 1 }}>
+                <div style={{ display: "flex" }}>
+                  <Typography
+                    variant="h6"
+                    gutterBottom
+                    component="div"
+                    style={{
+                      marginRight: 20,
+                      color:
+                        +moment().format("X") > +row.takeDay / 1000 &&
+                        row.status === "reserved"
+                          ? hexToRgbA("#f2bb05", "0.8")
+                          : "",
+                    }}
+                  >
+                    Վերցնելու օր
+                    <div style={{ fontSize: 15 }}>
+                      {timeZoneDateTime(+row.takeDay / 1000)}
+                    </div>
+                  </Typography>
+
+                  <Typography
+                    variant="h6"
+                    gutterBottom
+                    component="div"
+                    style={{
+                      marginRight: 20,
+                      color:
+                        +moment().format("X") > +row.bringDay / 1000 &&
+                        row.status === "taken"
+                          ? "rgba(233, 100, 100, 0.9)"
+                          : "",
+                    }}
+                  >
+                    Բերելու օր
+                    <div style={{ fontSize: 15 }}>
+                      {timeZoneDateTime(+row.bringDay / 1000)}
+                    </div>
+                  </Typography>
+                  <Typography variant="h6" gutterBottom component="div">
+                    Ամրագրող
+                    <div
+                      style={{
+                        fontSize: 14,
+                        whiteSpace: "pre",
+                        marginRight: 20,
+                      }}
+                    >
+                      {`${row?.fixer?.fullName} \n${row?.fixer?.email}`}
+                    </div>
+                  </Typography>
+                  {row.status === "reserved" && (
+                    <Typography
+                      variant="h6"
+                      gutterBottom
+                      component="div"
+                      style={{ marginRight: 20 }}
+                    >
+                      Մնացել է վճարելու
+                      <div style={{ fontSize: 14 }}>
+                        {currencyFormatterDecimal(row.price - row.deposit)}
+                      </div>
+                    </Typography>
+                  )}
+                  {row.notes && (
+                    <Typography variant="h6" gutterBottom component="div">
+                      Նշումներ
+                      <div style={{ fontSize: 14 }}>
+                        <PopoverComponent title={row.notes} showDotes>
+                          <div style={{ fontSize: 14 }}>{row.notes}</div>
+                        </PopoverComponent>
+                      </div>
+                    </Typography>
+                  )}
+                </div>
                 <Typography variant="h6" gutterBottom component="div">
-                  History
+                  Տեսականի
                 </Typography>
                 <Table size="small" aria-label="purchases">
                   <TableHead>
                     <TableRow>
-                      <TableCell>Date</TableCell>
-                      <TableCell>Customer</TableCell>
-                      <TableCell align="right">Amount</TableCell>
-                      <TableCell align="right">Total price ($)</TableCell>
+                      {colapseColumns.map((el: any) => (
+                        <TableCell
+                          align="left"
+                          key={el.key}
+                          style={{ fontWeight: 600 }}
+                        >
+                          {el.name}
+                        </TableCell>
+                      ))}
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {row.history.map((historyRow: any) => (
-                      <TableRow key={historyRow.date}>
-                        <TableCell component="th" scope="row">
-                          {historyRow.date}
-                        </TableCell>
-                        <TableCell>{historyRow.customerId}</TableCell>
-                        <TableCell align="right">{historyRow.amount}</TableCell>
-                        <TableCell align="right">
-                          {Math.round(historyRow.amount * 100) / 100}
-                        </TableCell>
+                    {row.assortment.map((assort: any) => (
+                      <TableRow
+                        key={assort.code}
+                        style={{
+                          background: assort.sale
+                            ? "rgba(233, 100, 100, 0.4)"
+                            : "",
+                        }}
+                      >
+                        {colapseColumns.map((el: any) => (
+                          <TableCell align="left" key={el.key}>
+                            {el.customElement
+                              ? el.customElement(assort[el.key])
+                              : assort[el.key]}
+                          </TableCell>
+                        ))}
                       </TableRow>
                     ))}
                   </TableBody>

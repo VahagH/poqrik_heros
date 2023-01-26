@@ -14,6 +14,15 @@ import PopoverComponent from "../../../components/PopoverComponent";
 
 export const columns: ColumnProps[] = [
   {
+    name: "Նոր տեսականի",
+    key: "slider",
+    hideColumnFromTable: true,
+    formTypes: [DIALOG_TYPES.add, DIALOG_TYPES.edit],
+    type: CaseInputTypes.CHECKBOX,
+    isRequired: false,
+    mdGrid: 12,
+  },
+  {
     name: "Կոդ",
     key: "code",
     formTypes: [DIALOG_TYPES.add, DIALOG_TYPES.edit],
@@ -73,7 +82,9 @@ export const columns: ColumnProps[] = [
     type: CaseInputTypes.NUMBER,
     jsType: "number",
     mask: "99999",
-    customElement: (el: any) => currencyFormatterDecimal(el),
+    customElement: (el: any) => (
+      <div style={{ whiteSpace: "pre" }}>{currencyFormatterDecimal(el)}</div>
+    ),
   },
   {
     name: "Զեղջ %",

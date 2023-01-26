@@ -101,7 +101,7 @@ const CRUDTable = ({
                     style={{
                       fontWeight: 600,
                       color: "#888",
-                      minWidth: "70px",
+                      minWidth: "max-content",
                     }}
                   >
                     {el.shortName ? el.shortName : el.name}

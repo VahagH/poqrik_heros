@@ -18,6 +18,7 @@ import SubmitLoading from "../../SubmitLoading";
 import { useLocation } from "react-router-dom";
 import { ToastContext } from "../../../context/ToastProvider";
 import Alert from "@mui/material/Alert";
+import { ProfileContext } from "../../../context/ProfileProvider";
 
 function getSubmitText(data: string) {
   switch (data) {
@@ -83,6 +84,7 @@ const CRUDDialog = ({
   const [filteredColumns, setFilteredColumns] = useState<ColumnProps[]>([]);
   const [submit, setSubmit] = useState<boolean>(false);
   const { dispatch: setToast } = useContext(ToastContext);
+  const { state: profileState } = useContext(ProfileContext);
   const location = useLocation();
 
   const handleClose = () => {
@@ -240,11 +242,11 @@ const CRUDDialog = ({
           dialog?.dialogType &&
           el.formTypes.includes(dialog?.dialogType) &&
           (el.hideInputFromDialog
-            ? !el.hideInputFromDialog(formData, setFormData)
+            ? !el.hideInputFromDialog(formData, setFormData, profileState.role)
             : true)
       )
     );
-  }, [dialog?.dialogType, columns, formData, setFormData]);
+  }, [dialog?.dialogType, columns, formData, setFormData, profileState.role]);
 
   useEffect(() => {
     if (location.pathname === "/users") {
@@ -286,7 +288,11 @@ const CRUDDialog = ({
         )}
         <ValidatorForm onSubmit={handleSubmit}>
           <DialogContent>
-            {error && <Alert severity="error">{error}</Alert>}
+            {error && (
+              <Alert severity="error" style={{ marginBottom: 20 }}>
+                {error}
+              </Alert>
+            )}
             <Grid container spacing={2}>
               {filteredColumns.map((el: ColumnProps) => (
                 <Grid item xs={12} md={el.mdGrid ? el.mdGrid : 6} key={el.key}>
@@ -295,6 +301,8 @@ const CRUDDialog = ({
                     name={el.key}
                     value={_.get(formData, el.key)}
                     onChange={handleChange}
+                    onChangeFunc={el?.onChangeFunc}
+                    formData={el?.onChangeFunc ? formData : null}
                     type={el.type}
                     error={inputError && !!inputError[el?.key]}
                     helperText={inputError && inputError[el?.key]}

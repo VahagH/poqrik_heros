@@ -42,6 +42,7 @@ const useStyles = makeStyles((theme) => ({
   container: {
     maxHeight: 100,
     display: "flex",
+    maxWidth: 1500,
     alignItems: "center",
     justifyContent: "space-between",
   },
