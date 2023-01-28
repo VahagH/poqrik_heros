@@ -1,11 +1,5 @@
 import { collection, getDocs, query, where, limit } from "firebase/firestore";
-import {
-  Container,
-  Grid,
-  makeStyles,
-  useMediaQuery,
-  useTheme,
-} from "@material-ui/core";
+import { Container, Grid, makeStyles } from "@material-ui/core";
 import { useCallback, useEffect, useState } from "react";
 import { db } from "../../../firebase/firebase";
 import MainCard from "../../../components/CardViews/MainCard";
@@ -36,8 +30,6 @@ const useStyles = makeStyles((theme) => ({
 
 const Home = () => {
   const classes = useStyles();
-  const theme = useTheme();
-  const isMobile600 = useMediaQuery(theme.breakpoints.down(600));
   const [data, setData] = useState<any[] | null>(null);
   const getData = useCallback(async () => {
     await getDocs(
@@ -59,22 +51,20 @@ const Home = () => {
     getData();
   }, [getData]);
 
+  if (!data || !data?.length) return <div />;
+
   return (
     <div className={classes.wrapper}>
       <div className={classes.title}>Նոր տեսականի</div>
-      {isMobile600 ? (
-        <></>
-      ) : (
-        <Container>
-          <Grid container spacing={4} style={{ padding: 20 }}>
-            {data?.map((item) => (
-              <Grid item lg={3} md={4} sm={6} key={item.id}>
-                <MainCard item={item} />
-              </Grid>
-            ))}
-          </Grid>
-        </Container>
-      )}
+      <Container>
+        <Grid container spacing={4} style={{ padding: 20 }}>
+          {data?.map((item) => (
+            <Grid item lg={3} md={4} sm={6} xs={12} key={item.id}>
+              <MainCard item={item} />
+            </Grid>
+          ))}
+        </Grid>
+      </Container>
     </div>
   );
 };

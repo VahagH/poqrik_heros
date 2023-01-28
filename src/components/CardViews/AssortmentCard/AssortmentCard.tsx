@@ -1,12 +1,10 @@
 import { useContext, useEffect, useState } from "react";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import { makeStyles } from "@material-ui/core";
+import { makeStyles, Button } from "@material-ui/core";
 import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { ProfileContext } from "../../../context/ProfileProvider";
 import {
@@ -31,8 +29,8 @@ const useStyles = makeStyles((theme) => ({
     width: "100%!important",
     paddingTop: "2.5%",
     display: "flex",
-    minHeight: 350,
-    maxHeight: 350,
+    minHeight: 410,
+    maxHeight: 410,
     flexDirection: "column",
     justifyContent: "space-between",
     borderRadius: "10px!important",
@@ -49,8 +47,8 @@ const useStyles = makeStyles((theme) => ({
     width: "100%!important",
     flexDirection: "column",
     justifyContent: "space-between",
-    minHeight: 350,
-    maxHeight: 350,
+    minHeight: 410,
+    maxHeight: 410,
     cursor: "default",
     background: `${hexToRgbA("#ecbbbb", "0.05")}!important`,
     borderRadius: "10px!important",
@@ -60,11 +58,10 @@ const useStyles = makeStyles((theme) => ({
       boxShadow: `0 4px 8px 4px ${hexToRgbA("#ecbbbb", "0.6")}!important`,
     },
   },
-  actions: {
-    cursor: "default",
-    justifyContent: "space-between",
-  },
   favBtn: {
+    position: "absolute",
+    top: 15,
+    left: 15,
     padding: 0,
     minWidth: "unset!important",
   },
@@ -88,6 +85,7 @@ const useStyles = makeStyles((theme) => ({
     overflow: "hidden",
     borderRadius: "10px",
     width: "95%!important",
+    cursor: "pointer",
     margin: "auto",
   },
   title: {
@@ -141,9 +139,10 @@ const AssortmentCard = ({ item, width }: AssortmentCardProps) => {
     >
       {sale ? <div className={classes.sale}>{sale}%</div> : null}
       <CardMedia
+        onClick={() => navigate(`/info/${id}`, { state: item })}
         component="img"
         alt=""
-        height="250"
+        height={350}
         image={url ? url : noImage}
         className={classes.img}
       />
@@ -205,27 +204,18 @@ const AssortmentCard = ({ item, width }: AssortmentCardProps) => {
             </div>
           </div>
         </CardContent>
-        <CardActions className={classes.actions}>
-          <Button
-            onClick={() => navigate(`/info/${id}`, { state: item })}
-            size="small"
-            color="secondary"
-          >
-            Տեսնել ավելին
-          </Button>
-          <Button
-            size="small"
-            color="secondary"
-            className={classes.favBtn}
-            onClick={() => handleFavClick(!profileState.favorites.includes(id))}
-          >
-            {profileState.favorites.includes(id) ? (
-              <FavoriteIcon />
-            ) : (
-              <FavoriteBorderIcon />
-            )}
-          </Button>
-        </CardActions>
+        <Button
+          size="small"
+          color="secondary"
+          className={classes.favBtn}
+          onClick={() => handleFavClick(!profileState.favorites.includes(id))}
+        >
+          {profileState.favorites.includes(id) ? (
+            <FavoriteIcon />
+          ) : (
+            <FavoriteBorderIcon />
+          )}
+        </Button>
       </div>
     </Card>
   );

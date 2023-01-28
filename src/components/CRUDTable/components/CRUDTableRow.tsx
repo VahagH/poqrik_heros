@@ -176,7 +176,7 @@ const CRUDTableRow = ({
         )}
       </TableRow>
       {colapseColumns && (
-        <TableRow style={{ background: "#eee", width: "100%" }}>
+        <TableRow style={{ background: "rgba(164,94,229,0.3)", width: "100%" }}>
           <TableCell
             style={{ paddingBottom: 0, paddingTop: 0 }}
             colSpan={columns.length}
@@ -193,7 +193,7 @@ const CRUDTableRow = ({
                       color:
                         +moment().format("X") > +row.takeDay / 1000 &&
                         row.status === "reserved"
-                          ? hexToRgbA("#f2bb05", "0.8")
+                          ? "#f2bb05"
                           : "",
                     }}
                   >
@@ -275,9 +275,9 @@ const CRUDTableRow = ({
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {row.assortment.map((assort: any) => (
+                    {row.assortment.map((assort: any, idx: number) => (
                       <TableRow
-                        key={assort.code}
+                        key={idx}
                         style={{
                           background: assort.sale
                             ? "rgba(233, 100, 100, 0.4)"

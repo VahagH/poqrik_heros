@@ -55,6 +55,19 @@ export const columns: ColumnProps[] = [
     key: "phone",
     formTypes: [DIALOG_TYPES.add, DIALOG_TYPES.edit],
     type: CaseInputTypes.TELEPHONE,
+    customElement: (el: string, row: any) => (
+      <div>
+        <div>{el}</div>
+        <div>{row?.phone2}</div>
+      </div>
+    ),
+  },
+  {
+    name: "Հեռախոս 2",
+    key: "phone2",
+    formTypes: [DIALOG_TYPES.add, DIALOG_TYPES.edit],
+    type: CaseInputTypes.TELEPHONE,
+    isRequired: false,
   },
   {
     name: "Տեսականի",

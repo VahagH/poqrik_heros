@@ -164,7 +164,12 @@ const Footer = ({ handleClick, isAuthenticated }: FooterProps) => {
         <Grid container>
           <Grid item md={6} xs={12} className={classes.section}>
             <div style={{ display: "flex" }}>
-              <img src={logoWhite} alt="" height="80px" />
+              <img
+                src={logoWhite}
+                alt=""
+                height="80px"
+                onClick={() => !isAuthenticated && handleClick()}
+              />
               <div className={classes.appName}>
                 <div>Փոքրիկ</div>
                 <div>Հերոս</div>
@@ -252,9 +257,7 @@ const Footer = ({ handleClick, isAuthenticated }: FooterProps) => {
         </Grid>
       </Container>
       <div className={classes.rights}>
-        Բոլոր իրա
-        <span onClick={() => !isAuthenticated && handleClick()}>վ</span>
-        ունքները պաշտպանված են: &copy; {moment().year()}
+        Բոլոր իրավունքները պաշտպանված են: &copy; {moment().year()}
       </div>
     </div>
   );

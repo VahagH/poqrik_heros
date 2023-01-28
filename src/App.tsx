@@ -84,6 +84,10 @@ function App() {
     }
   }, [authDispatch, authState.uid]);
 
+  if (localStorage.getItem("isAuthenticated") && !profileState.role) {
+    return <Loading />;
+  }
+
   return (
     <div className={classes.wrapper}>
       <NavBar />

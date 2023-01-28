@@ -152,6 +152,9 @@ export const COLORS = [
   { name: "Նեոն", value: "neon" },
   { name: "Սև", value: "black" },
   { name: "Մարմնագույն", value: "beige" },
+  { name: "Ոսկեգույն", value: "gold" },
+  { name: "Արծաթագույն", value: "silver" },
+  { name: "Երկնագույն", value: "skyBlue" },
 ];
 
 export interface AutocolpleteType {

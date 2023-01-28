@@ -38,6 +38,7 @@ const useStyles = makeStyles((theme) => ({
     left: 0,
     width: "60%",
     minWidth: 250,
+    maxWidth: 370,
     overflowY: "scroll",
     height: "100vh",
     padding: "20px 20px 0 20px",
@@ -126,11 +127,13 @@ const Data = ({ data, title, filters }: DataProps) => {
             key === "search" &&
             filter[key] &&
             String(el.code) !== filter[key] &&
-            !el.title.toLowerCase().includes(filter[key].toLowerCase()) &&
-            !el.subtitle.toLowerCase().includes(filter[key].toLowerCase()) &&
             !(
+              !el?.title?.toLowerCase().includes(filter[key].toLowerCase()) &&
+              !el?.subtitle
+                ?.toLowerCase()
+                .includes(filter[key].toLowerCase()) &&
               el?.barCode &&
-              el.barCode.toLowerCase().includes(filter[key].toLowerCase())
+              el?.barCode?.toLowerCase().includes(filter[key].toLowerCase())
             )
           ) {
             return false;
@@ -299,7 +302,7 @@ const Data = ({ data, title, filters }: DataProps) => {
             Տվյալներ չկան
           </div>
         )}
-        {filteredData.length > 12 && (
+        {data.length > 12 && (
           <Pagination
             count={Math.ceil(filteredData.length / 12)}
             variant="outlined"

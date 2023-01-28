@@ -72,6 +72,12 @@ const PageActions = ({
             String(el[key])?.toLowerCase().includes(search.toLowerCase())
           ) {
             return true;
+          } else if (
+            el[key] &&
+            Array.isArray(el[key]) &&
+            el[key].map((el: any) => el.name === search).includes(true)
+          ) {
+            return true;
           }
         }
         return false;

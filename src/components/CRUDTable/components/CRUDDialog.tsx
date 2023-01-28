@@ -110,7 +110,11 @@ const CRUDDialog = ({
   };
 
   const handleSubmit = () => {
-    if (validate && validate(formData, setInputError)) {
+    if (
+      dialog?.dialogType !== "delete" &&
+      validate &&
+      validate(formData, setInputError)
+    ) {
       return;
     }
     setSubmit(true);

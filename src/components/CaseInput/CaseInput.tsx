@@ -94,6 +94,7 @@ const CaseInput = ({
       return (
         <TextValidator
           variant="outlined"
+          margin="dense"
           fullWidth={fullWidth}
           onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
             onChange(event.target.name, event.target.value);
@@ -150,6 +151,7 @@ const CaseInput = ({
           {() => (
             <TextValidator
               variant="outlined"
+              margin="dense"
               fullWidth={fullWidth}
               label={newLabel}
               name={name}
@@ -168,6 +170,7 @@ const CaseInput = ({
       return (
         <TextValidator
           variant="outlined"
+          margin="dense"
           fullWidth={fullWidth}
           onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
             onChange(event.target.name, event.target.value);
@@ -206,6 +209,7 @@ const CaseInput = ({
       return (
         <TextValidator
           variant="outlined"
+          margin="dense"
           fullWidth={fullWidth}
           onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
             onChange(event.target.name, event.target.value);
@@ -235,6 +239,7 @@ const CaseInput = ({
               <TextField
                 {...props}
                 variant="outlined"
+                margin="dense"
                 fullWidth={fullWidth}
                 name={name}
                 // value={value || null}
@@ -285,6 +290,7 @@ const CaseInput = ({
               value={value || null}
               name={name}
               variant="outlined"
+              margin="dense"
               placeholder={placeHolder}
               fullWidth={fullWidth}
               validators={isRequired && !value ? ["required"] : []}
@@ -332,6 +338,7 @@ const CaseInput = ({
           renderInput={(params) => (
             <TextValidator
               {...params}
+              margin="dense"
               label={newLabel}
               name={name}
               value={value || null}
@@ -346,7 +353,7 @@ const CaseInput = ({
     case CaseInputTypes.TELEPHONE:
       return (
         <ReactInputMask
-          mask="+9999999999999"
+          mask="9999999999999"
           onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
             onChange(event.target.name, event.target.value.replace(/\s/g, ""));
           }}
@@ -359,6 +366,7 @@ const CaseInput = ({
           {() => (
             <TextValidator
               variant="outlined"
+              margin="dense"
               fullWidth={fullWidth}
               label={newLabel}
               value={value || ""}
@@ -377,6 +385,7 @@ const CaseInput = ({
       return (
         <TextValidator
           variant="outlined"
+          margin="dense"
           fullWidth={fullWidth}
           multiline
           onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
