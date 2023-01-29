@@ -106,6 +106,7 @@ const Data = ({ data, title, filters }: DataProps) => {
   const isMobile750 = useMediaQuery(theme.breakpoints.down(750));
   const isMobile500 = useMediaQuery(theme.breakpoints.down(500));
   const [filter, setFilters] = useReducer((state: any, newState: any) => {
+    setPage(1);
     let colors = state.color ? state.color : [];
     const returnData = newState ? { ...state, ...newState } : {};
     if (newState?.color) {

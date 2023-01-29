@@ -68,6 +68,7 @@ export const columns: ColumnProps[] = [
     formTypes: [DIALOG_TYPES.add, DIALOG_TYPES.edit],
     type: CaseInputTypes.TELEPHONE,
     isRequired: false,
+    hideColumnFromTable: true,
   },
   {
     name: "Տեսականի",
@@ -76,12 +77,12 @@ export const columns: ColumnProps[] = [
     onChangeFunc: (formData, zis) => {
       const price = zis.reduce((pr: number, val: any) => {
         const price = +val.price;
-        pr += val.sale ? Math.floor(price - price * (val.sale / 100)) : price;
+        pr += val?.sale ? Math.floor(price - price * (val.sale / 100)) : price;
         return pr;
       }, 0);
       return {
         price:
-          formData.sale && formData.sale < price
+          formData?.sale && formData?.sale < price
             ? price - formData.sale
             : price,
       };
