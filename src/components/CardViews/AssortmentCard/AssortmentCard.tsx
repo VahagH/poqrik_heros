@@ -28,6 +28,7 @@ const useStyles = makeStyles((theme) => ({
     cursor: "default",
     width: "100%!important",
     paddingTop: "2.5%",
+    paddingBottom: 5,
     display: "flex",
     minHeight: 410,
     maxHeight: 410,
@@ -43,6 +44,7 @@ const useStyles = makeStyles((theme) => ({
   cardSale: {
     overflow: "unset!important",
     paddingTop: "2.5%",
+    paddingBottom: 5,
     display: "flex",
     width: "100%!important",
     flexDirection: "column",

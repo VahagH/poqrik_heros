@@ -39,7 +39,6 @@ const CRUDTable = ({
   const [editedRow, setEditedRow] = useState<any>(null);
   const [dialog, setDialog] = useState(undefined);
   const [filteredRows, setFilteredRows] = useState<any>([]);
-  const [formData, setFormData] = useState(null);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(30);
   const filteredColumns = columns.filter((el) =>
@@ -69,10 +68,8 @@ const CRUDTable = ({
       <CRUDDialog
         dialog={dialog}
         columns={columns}
-        formData={formData}
         editedRow={editedRow}
         setDialog={setDialog}
-        setFormData={setFormData}
         addData={addData}
         getData={getData}
         setEditedRow={setEditedRow}
@@ -134,7 +131,6 @@ const CRUDTable = ({
                         setSelected,
                         updateData,
                         deleteData,
-                        setFormData,
                       }}
                     />
                   ))

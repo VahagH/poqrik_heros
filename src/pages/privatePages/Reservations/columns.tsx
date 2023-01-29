@@ -127,7 +127,7 @@ export const columns: ColumnProps[] = [
     shortName: "Զեղջ",
     name: "Զեղջ կանխիկ",
     key: "sale",
-    hideInputFromDialog: (formData, handleChange, role) => role !== "admin",
+    hideInputFromDialog: (formData, role) => role !== "admin",
     formTypes: [DIALOG_TYPES.add, DIALOG_TYPES.edit],
     type: CaseInputTypes.NUMBER,
     onChangeFunc: (formData, zis) => {

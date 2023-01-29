@@ -111,13 +111,8 @@ export const columns: ColumnProps[] = [
     type: CaseInputTypes.AUTOCOMPLETE,
     options: COLORS,
     hideColumnFromTable: true,
-    hideInputFromDialog(formData, setFormData) {
-      if (formData?.type && formData.type === "shape") {
-        setFormData((prev: any) => ({ ...prev, color: null }));
-        return true;
-      }
-      return false;
-    },
+    hideInputFromDialog: (formData) =>
+      formData?.type && formData.type === "shape",
     customElement: (el: string) => (el === "dress" ? "Տոնական" : "Կերպար"),
   },
   {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { TextValidator } from "react-material-ui-form-validator";
 import { CaseInputProps } from "../../support/types";
 import ReactInputMask from "react-input-mask";
@@ -411,4 +411,9 @@ const CaseInput = ({
   }
 };
 
-export default CaseInput;
+export default memo(CaseInput, (newState: any, prevState: any) => {
+  if (newState.value === prevState.value) {
+    return true;
+  }
+  return false;
+});

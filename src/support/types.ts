@@ -33,7 +33,6 @@ export interface CRUDTableRowProps {
   updateData?: (data: any, id: string) => any;
   deleteData?: (id: string) => any;
   setDialog: (data: any) => void;
-  setFormData: (data: any) => void;
   setEditedRow: (data: any) => void;
 }
 
@@ -64,11 +63,7 @@ export interface ColumnProps {
   onChangeFunc?: (formData: any, zis: any) => any;
   disabled?: (formData: any, dialogType: string, row: any) => boolean;
   customElement?: (el: any, row: any) => any;
-  hideInputFromDialog?: (
-    formData: any,
-    handleChange: any,
-    role: string
-  ) => boolean;
+  hideInputFromDialog?: (formData: any, role: string) => boolean;
 }
 
 export interface CRUDTableProps {
@@ -92,13 +87,11 @@ export interface DialogProps {
 export interface CRUDDialogProps {
   dialog: DialogProps | undefined;
   columns: ColumnProps[];
-  formData: any;
   editedRow: any;
   validate?: (formData: any, setInputError: (data: any) => void) => boolean;
   setDialog: (data: undefined) => void;
   updateData?: (data: any, id: string) => any;
   deleteData?: (id: string) => any;
-  setFormData: (data: string | number | any) => void;
   addData?: (data: any) => any;
   addSuccessCallback?: (data: any, id: string) => any;
   getData: () => void;

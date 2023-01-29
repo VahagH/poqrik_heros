@@ -16,11 +16,7 @@ import {
   timeZoneDateTime,
 } from "../../../support/supportFunctions";
 import { makeStyles, useTheme } from "@material-ui/core";
-import {
-  ColumnProps,
-  CRUDTableRowProps,
-  DIALOG_TYPES,
-} from "../../../support/types";
+import { CRUDTableRowProps, DIALOG_TYPES } from "../../../support/types";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import _ from "lodash";
 import FadeMenu from "../../FadeMenu";
@@ -55,7 +51,6 @@ const CRUDTableRow = ({
   updateData,
   setDialog,
   deleteData,
-  setFormData,
 }: CRUDTableRowProps) => {
   const classes = useStyles();
   const theme = useTheme();
@@ -65,16 +60,6 @@ const CRUDTableRow = ({
     {
       name: "Խմբագրել",
       onClick: () => {
-        setFormData(() => {
-          return columns
-            .filter((el: ColumnProps) =>
-              el.formTypes?.includes(DIALOG_TYPES.edit)
-            )
-            .reduce((form: any, el: ColumnProps) => {
-              form[el.key] = _.get(row, el.rowValueKey || el.key);
-              return form;
-            }, {});
-        });
         setEditedRow(row);
         setDialog({
           open: true,

@@ -13,7 +13,7 @@ import { clean, hexToRgbA } from "../../../support/supportFunctions";
 import CaseInput from "../../CaseInput";
 import _ from "lodash";
 import { ValidatorForm } from "react-material-ui-form-validator";
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, memo } from "react";
 import SubmitLoading from "../../SubmitLoading";
 import { useLocation } from "react-router-dom";
 import { ToastContext } from "../../../context/ToastProvider";
@@ -66,11 +66,9 @@ const useStyles = makeStyles((theme) => ({
 const CRUDDialog = ({
   dialog,
   columns,
-  formData,
   editedRow,
   validate,
   setDialog,
-  setFormData,
   addData,
   getData,
   updateData,
@@ -81,8 +79,8 @@ const CRUDDialog = ({
   const classes = useStyles();
   const [error, setError] = useState<string | null>(null);
   const [inputError, setInputError] = useState<any>(null);
-  const [filteredColumns, setFilteredColumns] = useState<ColumnProps[]>([]);
   const [submit, setSubmit] = useState<boolean>(false);
+  const [formData, setFormData] = useState<any>(null);
   const { dispatch: setToast } = useContext(ToastContext);
   const { state: profileState } = useContext(ProfileContext);
   const location = useLocation();
@@ -238,19 +236,31 @@ const CRUDDialog = ({
     }
   };
 
+  const filteredColumns = columns.filter(
+    (el: ColumnProps) =>
+      el.formTypes &&
+      dialog?.dialogType &&
+      el.formTypes.includes(dialog?.dialogType) &&
+      (el.hideInputFromDialog
+        ? !el.hideInputFromDialog(formData, profileState.role)
+        : true)
+  );
+
   useEffect(() => {
-    setFilteredColumns(
-      columns.filter(
-        (el: ColumnProps) =>
-          el.formTypes &&
-          dialog?.dialogType &&
-          el.formTypes.includes(dialog?.dialogType) &&
-          (el.hideInputFromDialog
-            ? !el.hideInputFromDialog(formData, setFormData, profileState.role)
-            : true)
-      )
-    );
-  }, [dialog?.dialogType, columns, formData, setFormData, profileState.role]);
+    if (editedRow) {
+      setFormData(() => {
+        return filteredColumns
+          .filter((el: ColumnProps) =>
+            el.formTypes?.includes(DIALOG_TYPES.edit)
+          )
+          .reduce((form: any, el: ColumnProps) => {
+            form[el.key] = _.get(editedRow, el.rowValueKey || el.key);
+            return form;
+          }, {});
+      });
+    }
+    /* eslint-disable */
+  }, [editedRow]);
 
   useEffect(() => {
     if (location.pathname === "/users") {
@@ -352,4 +362,4 @@ const CRUDDialog = ({
   );
 };
 
-export default CRUDDialog;
+export default memo(CRUDDialog);
